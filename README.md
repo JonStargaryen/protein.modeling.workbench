@@ -6,6 +6,7 @@ Stay tuned for a demo of the current implementation.
 
 # Developing
 To be honest - getting this project running is not trivial (even though bndtools & OSGi enroute help a lot).
+
 __IDE requirements__:
 * eclipse
 * bndtools plugin (https://dl.bintray.com/bndtools/bndtools/3.2.0)
