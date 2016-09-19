@@ -227,7 +227,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
 	*/
 
 	@Override
-public Object clone () {
+	public Object clone () {
 		return this.copy();
 	}
 
@@ -842,7 +842,7 @@ public Object clone () {
 	}
 
 	@Override
-public String toString(){
+	public String toString(){
 		StringWriter writer = new StringWriter();
 		PrintWriter printWriter = new PrintWriter(writer);
 		print(printWriter,getColumnDimension(),3);

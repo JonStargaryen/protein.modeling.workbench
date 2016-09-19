@@ -3,7 +3,11 @@
 #
 
 Bundle-Version: 1.0.0.${tstamp}
-Bundle-Description: test
+Bundle-Description: A Web portal which provides functionality to explore the nature of protein \
+	\
+ sequences and structures in an interactive manner. All results will can \
+	\
+ be visualized by a sequence representation or using the Protein Viewer.
 
 Private-Package:  \
 	de.bioforscher.pmw.application
@@ -62,3 +66,5 @@ JPM-Command:			pmw
 -runfw: org.eclipse.osgi;version='[3.10.100.v20150529-1857,3.10.100.v20150529-1857]'
 -runee: JavaSE-1.8
 -runrequires: osgi.identity;filter:='(osgi.identity=de.bioforscher.pmw.application)'
+Bundle-Vendor: University of Applied Sciences Mittweida
+Bundle-ContactAddress: Technikumplatz 17, 09648 Mittweida, Germany

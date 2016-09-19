@@ -64,9 +64,7 @@
 					<!-- the coordinate part -->
 					<div data-ng-show="options.renderPDB" class="pdb-representation">
 						<div class="chain" data-ng-repeat="chain in protein.chains">
-							<div class="chainId">{{chain.chainId}}</div>
 							<div class="residue" data-ng-repeat="residue in chain.residues">
-								<div class="resId">{{residue.aminoAcid}}</div>
 								<div class="atom" data-ng-repeat="atom in residue.atoms">{{atom.pdbRepresentation}}</div>
 							</div>
 						</div>

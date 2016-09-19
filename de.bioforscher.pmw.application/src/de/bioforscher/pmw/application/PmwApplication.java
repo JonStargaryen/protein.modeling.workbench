@@ -52,10 +52,7 @@ public class PmwApplication implements REST {
 	private ModelPersistence modelPersistenceService;
 	@Reference
 	private ReconstructionService reconstructionService;
-	
-	public String getUpper(String string) {
-		return string.toUpperCase();
-	}
+
 	//TODO implement: some 'delta' function would be nice, so not the whole model has to be transfered but rather only the model's changes
 	
 	/*

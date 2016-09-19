@@ -216,9 +216,17 @@ public class ANVIL extends AbstractFeatureProvider implements Annotator {
 	 * @return the minimal squared distance of this atom to any CA atom of the protein
 	 */
 	private double minimalSquaredDistanceToProteinCAAtom(double[] atom, Protein protein) {
-		//TODO this is wrong - either no membrane is added or no molecules too close to the protein are discarded
+//		double minDistance = Double.MAX_VALUE;
+//		for(Chain c : protein.chains) {
+//			for(Residue r : c.residues) {
+//				double distance = this.linearAlgebra.distanceFast(atom, this.modelConverter.getCA(r).xyz);
+//				if(distance < minDistance) {
+//					minDistance = distance;
+//				}
+//			}
+//		}
 		return protein.chains.stream().flatMap(c -> c.residues.stream()).mapToDouble(r ->
-			this.linearAlgebra.distanceFast(this.modelConverter.getCA(r).xyz, this.centerOfMass)).min().getAsDouble();
+			this.linearAlgebra.distanceFast(this.modelConverter.getCA(r).xyz, atom)).min().getAsDouble();
 	}
 	
 	private void assignTopology() {
@@ -232,7 +240,6 @@ public class ANVIL extends AbstractFeatureProvider implements Annotator {
 		this.protein.membrane = membrane;
 		for(Chain c : this.protein.chains) {
 			for(Residue r : c.residues) {
-//				System.out.println(r + " is positioned in the membrane: " + isInSpace);
 				double value = isInSpace(r, membrane) ? Topology.TRANSMEMBRANE.ordinal() : Topology.NON_TRANSMEMBRANE.ordinal();
 				r.features.put(FeatureType.MEMBRANE_TOPOLOGY.name(), wrapInArray(value));
 			}
@@ -244,6 +251,7 @@ public class ANVIL extends AbstractFeatureProvider implements Annotator {
 	 * @param protein
 	 */
 	private void placeMembraneMolecules(Protein protein) {
+		// square maximal extent to speed up computations later on
 		double radius = this.maximalExtent * this.maximalExtent;
 		Membrane membrane = protein.membrane;
 		double[] normalVector = membrane.normalVector;
