@@ -1,0 +1,22 @@
+<section data-ng-cloak style="max-width: 800px; margin: 0px auto;">
+	<div>
+		<h1>Protein Modeling Workbench</h1>
+		<p class="lead">${Bundle-Description}</p>
+	</div>
+	<div data-ng-controller="TabController as tab">
+		<ul class="nav nav-pills upload-selection">
+			<li data-ng-class="{ active: tab.isSelected(1) }"><a data-ng-click="tab.selectTab(1)">files</a></li>
+			<li data-ng-class="{ active: tab.isSelected(2) }"><a data-ng-click="tab.selectTab(2)">sequences</a></li>
+		</ul>
+		<form data-ng-controller="SubmitController as submit">
+			<div data-ng-show="tab.isSelected(1)">
+				<input class="upload-input-field drop-box" data-pdb-Upload type="file" name="file">
+			</div>
+			<div data-ng-show="tab.isSelected(2)">
+				<textarea rows="10" style="resize: none; width: 100%; padding: 5px;" class="upload-input-field" data-ng-minlength="0"
+       			data-ng-model="sequence" data-ng-pattern="QWERTIPASDFGHKLYCVNMqwertipasdfghklycvnm" data-ng-required="true"></textarea>
+				<a class="btn btn-lg btn-success" data-ng-click="createProtein()" role="button">Submit!</a>
+			</div>
+		</form>
+	</div>
+</section>

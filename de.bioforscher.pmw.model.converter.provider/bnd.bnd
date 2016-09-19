@@ -1,0 +1,29 @@
+#
+#  BUNDLE 
+#
+
+
+Bundle-Version:					1.0.0.${tstamp}
+Bundle-Description: Implements the ModelConverter API, duh.
+
+Private-Package: \
+	de.bioforscher.pmw.model.converter.provider,\
+	de.bioforscher.pmw.model.converter.parser
+	
+-buildpath: \
+	osgi.enroute.base.api;version=1.0,\
+	de.bioforscher.pmw.api;version=latest,\
+	de.bioforscher.pmw.model;version=latest
+	
+-testpath: \
+	osgi.enroute.junit.wrapper;version=4.12
+
+-includeresource: {readme.md}
+
+
+-runrequires:  \
+	osgi.identity;filter:='(osgi.identity=de.bioforscher.pmw.model.converter.provider)'
+	
+-runbundles: \
+	${error;Resolve first}
+Export-Package: de.bioforscher.pmw.api

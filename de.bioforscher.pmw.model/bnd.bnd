@@ -1,0 +1,4 @@
+Bundle-Description: The bundle providing the model which forms the underlying data structure \
+	of the application.
+-buildpath: osgi.enroute.base.api
+Export-Package: de.bioforscher.pmw.model

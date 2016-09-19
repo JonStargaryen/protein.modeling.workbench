@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+<base href="/de.bioforscher.pmw/">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+<!-- link rel="icon" href="/de.bioforscher.pmw/favicon.ico" -->
+
+<title>Protein Modeling Workbench</title>
+
+<link rel="stylesheet" type="text/css" href="/osgi.enroute.webresource/${bsn}/${Bundle-Version}/*.css">
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body data-ng-app="de.bioforscher.pmw">
+	<header class="clearfix">
+		<a href="home" class="logo">
+			Protein Modeling Workbench
+		</a>
+		<ul class="menu">
+			<li data-ng-class="{ active: page() == '/home' }"><a href="home"><i class="fa fa-home" aria-hidden="true"></i> Home</a></li>
+			<li data-ng-class="{ active: page() == '/project' }" data-ng-show="page() == '/project'"><a href="#"><i class="fa fa-cubes" aria-hidden="true"></i> Project</a></li>
+			<li data-ng-class="{ active: page() == '/about' }"><a href="about"><i class="fa fa-question-circle" aria-hidden="true"></i> About</a></li>
+		</ul>
+	</header>
+
+	<div data-ng-repeat="alert in alerts" class="alert alert-{{alert.type || 'alert'}} alert-dismissible">
+		{{alert.msg}}
+		<button type="button" data-ng-click='closeAlert($index)' class="close pull-right"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	</div>
+ 		
+	<div data-ng-view></div>
+	
+	<!-- div class="footer">
+		<div class="small">&copy; ${def;Bundle-Vendor;Company} ${tstamp;YYYY}</div>
+	</div -->
+
+	<script src="/osgi.enroute.webresource/${bsn}/${Bundle-Version}/*.js"></script>
+</body>
+</html>

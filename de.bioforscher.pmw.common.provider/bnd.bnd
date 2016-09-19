@@ -1,0 +1,29 @@
+#
+#  BUNDLE 
+#
+
+
+Bundle-Version:					1.0.0.${tstamp}
+Bundle-Description: A bundle providing common functionality shared by multiple bundles.
+
+Private-Package:  \
+	de.bioforscher.pmw.common.provider
+	
+-buildpath: \
+	osgi.enroute.base.api;version=1.0,\
+	de.bioforscher.pmw.api;version=latest
+	
+-testpath: \
+	osgi.enroute.junit.wrapper;version=4.12
+
+-includeresource: {readme.md}
+
+
+-runrequires:  \
+	osgi.identity;filter:='(osgi.identity=de.bioforscher.pmw.common.provider)'
+	
+-runbundles: \
+	${error;Resolve first}
+Export-Package: \
+	org.biojava.nbio.structure.jama,\
+	de.bioforscher.pmw.api

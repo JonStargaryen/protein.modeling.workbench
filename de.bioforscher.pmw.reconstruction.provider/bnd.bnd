@@ -1,0 +1,36 @@
+#
+#  BUNDLE 
+#
+
+
+Bundle-Version:					1.0.0.${tstamp}
+Bundle-Description: Reconstructs protein coordinates from previously computed features.
+
+Private-Package: \
+	de.bioforscher.pmw.reconstruction.provider,\
+	de.bioforscher.pmw.reconstruction.backbone.bbq,\
+	de.bioforscher.pmw.reconstruction.ca,\
+	de.bioforscher.pmw.reconstruction.ca.mds,\
+	de.bioforscher.pmw.reconstruction.factory,\
+	de.bioforscher.pmw.reconstruction.md,\
+	de.bioforscher.pmw.reconstruction.md.annealing,\
+	de.bioforscher.pmw.reconstruction.md.integrator,\
+	de.bioforscher.pmw.reconstruction.sidechain.pulchra
+	
+-buildpath: \
+	osgi.enroute.base.api;version=1.0,\
+	de.bioforscher.pmw.api;version=latest,\
+	de.bioforscher.pmw.model;version=latest,\
+	de.bioforscher.pmw.common.provider;version=latest
+	
+-testpath: \
+	osgi.enroute.junit.wrapper;version=4.12
+
+-includeresource: {readme.md}
+
+
+-runrequires:  \
+	osgi.identity;filter:='(osgi.identity=de.bioforscher.pmw.reconstruction.provider)'
+	
+-runbundles: \
+	${error;Resolve first}
