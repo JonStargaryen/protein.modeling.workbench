@@ -3,6 +3,7 @@ package de.bioforscher.pmw.feature.extractor.algorithm.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.osgi.service.log.LogService;
 import org.slf4j.Logger;
 
 import de.bioforscher.pmw.api.FeatureExtractor;
@@ -34,7 +35,7 @@ public class DefaultResidueContactAnnotator extends AbstractFeatureProvider impl
      */
     private static final double HELIX_HELIX_INTERACTION_CB_CUTOFF_SQUARED = HELIX_HELIX_INTERACTION_CB_CUTOFF * HELIX_HELIX_INTERACTION_CB_CUTOFF;
 	
-	public DefaultResidueContactAnnotator(FeatureExtractor featureExtractor, Logger logger, LinearAlgebra linearAlgebra, ModelConverter modelConverter) {
+	public DefaultResidueContactAnnotator(FeatureExtractor featureExtractor, LogService logger, LinearAlgebra linearAlgebra, ModelConverter modelConverter) {
 		super(featureExtractor, logger, linearAlgebra, modelConverter, new FeatureType[] { /*FeatureType.RESIDUE_CONTACTS*/ });
 	}
 

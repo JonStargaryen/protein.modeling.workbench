@@ -1,10 +1,11 @@
 package de.bioforscher.pmw.feature.extractor.provider;
 
+import java.util.Arrays;
+
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import org.slf4j.Logger;
-
+import org.osgi.service.log.LogService;
 import de.bioforscher.pmw.api.FeatureExtractor;
 import de.bioforscher.pmw.api.LinearAlgebra;
 import de.bioforscher.pmw.api.ModelConverter;
@@ -23,10 +24,13 @@ public class FeatureExtractorImpl implements FeatureExtractor {
 	private LinearAlgebra linearAlgebra;
 	@Reference
 	private ModelConverter modelConverter;
-	@Reference
-	private Logger logger;
-	
+	private LogService logger;
 	private FeatureProviderAlgorithmFactory factory;
+	
+	@Reference
+	public void setLogService(LogService log) {
+		this.logger = log;
+	}
 	
 	@Activate
 	public void activate() {
@@ -69,7 +73,7 @@ public class FeatureExtractorImpl implements FeatureExtractor {
 			// recursively generate required features
 			FeatureType[] missingFeatures = featureProvider.checkForMissingRequirements(protein);
 			computeFeatures(protein, missingFeatures);
-			this.logger.info("using " + featureProvider.getClass().getSimpleName() + " to generate features");
+			this.logger.log(LogService.LOG_INFO, "using " + featureProvider.getClass().getSimpleName() + " to generate " + Arrays.toString(featuresToCompute));
 			featureProvider.computeFeature(protein);
 		}
 	}

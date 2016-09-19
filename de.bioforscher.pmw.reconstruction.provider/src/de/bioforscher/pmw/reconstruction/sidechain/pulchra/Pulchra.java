@@ -10,8 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-
+import org.osgi.service.log.LogService;
 import de.bioforscher.pmw.api.LinearAlgebra;
 import de.bioforscher.pmw.api.ModelConverter;
 import de.bioforscher.pmw.model.Protein;
@@ -62,7 +61,7 @@ public class Pulchra implements ReconstructionAlgorithm {
 	
 	private List<Residue> residues;
 
-	public Pulchra(Logger logger, LinearAlgebra linearAlgebra, ModelConverter modelConverter) {
+	public Pulchra(LogService logger, LinearAlgebra linearAlgebra, ModelConverter modelConverter) {
 		if(rotStatIdx == null) {
 			initializeLibrary();
 		}

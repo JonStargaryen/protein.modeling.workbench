@@ -6,8 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.slf4j.Logger;
-
+import org.osgi.service.log.LogService;
 import de.bioforscher.pmw.api.FeatureExtractor;
 import de.bioforscher.pmw.api.LinearAlgebra;
 import de.bioforscher.pmw.api.ModelConverter;
@@ -101,7 +100,7 @@ public class ANVIL extends AbstractFeatureProvider implements Annotator {
 	private int hphiltotal;
 	private PotentialMembrane membrane;
 	
-	public ANVIL(FeatureExtractor featureExtractor, Logger logger, LinearAlgebra linearAlgebra, ModelConverter modelConverter) {
+	public ANVIL(FeatureExtractor featureExtractor, LogService logger, LinearAlgebra linearAlgebra, ModelConverter modelConverter) {
 		// provides membrane topology information, depends on ASA annotation
     	super(featureExtractor, logger, linearAlgebra, modelConverter, new FeatureType[] { FeatureType.MEMBRANE_TOPOLOGY }, FeatureType.ACCESSIBLE_SURFACE_AREA);
     }
@@ -127,22 +126,22 @@ public class ANVIL extends AbstractFeatureProvider implements Annotator {
 		this.hphiltotal = hphobHphil[1];
 		
 		// determine the best possible membrane placement among all generated spherePoints
-		System.out.println("initial membrane placement");
+		this.logger.log(LogService.LOG_DEBUG, "initial membrane placement");
 		PotentialMembrane initialMembrane = processSpherePoints(generateSpherePoints(this.numberOfSpherePoints));
 //		System.out.println("initial quality: " + initialMembrane.qmax);
 		
 		// try to improve the results by finding a better axis relative to the currently winning membrane
-		System.out.println("trying to refine");
+		this.logger.log(LogService.LOG_DEBUG, "trying to refine");
 		PotentialMembrane alternativeMembrane = processSpherePoints(findProximateAxes(initialMembrane));
 //		System.out.println("refined quality: " + alternativeMembrane.qmax);
 		
-		System.out.println("membrane inclination did " + (initialMembrane.qmax > alternativeMembrane.qmax ? "not " : "") + "improve");
+		this.logger.log(LogService.LOG_DEBUG, "membrane inclination did " + (initialMembrane.qmax > alternativeMembrane.qmax ? "not " : "") + "improve");
 		this.membrane = initialMembrane.qmax > alternativeMembrane.qmax ? initialMembrane : alternativeMembrane;
 		
-		System.out.println("adjusting thickness");
+		this.logger.log(LogService.LOG_DEBUG, "adjusting thickness");
 		this.step = 0.3;
 		double thickness = this.linearAlgebra.distance(this.membrane.c1, this.membrane.c2);
-		System.out.println("membrane thickness is " + thickness + " A");
+		this.logger.log(LogService.LOG_DEBUG, "membrane thickness is " + thickness + " A");
 		//TODO: implement adaptation of membrane thickness
 		
 		assignTopology();

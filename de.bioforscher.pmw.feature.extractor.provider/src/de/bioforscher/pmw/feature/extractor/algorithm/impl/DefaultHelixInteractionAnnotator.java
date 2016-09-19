@@ -1,7 +1,6 @@
 package de.bioforscher.pmw.feature.extractor.algorithm.impl;
 
-import org.slf4j.Logger;
-
+import org.osgi.service.log.LogService;
 import de.bioforscher.pmw.api.FeatureExtractor;
 import de.bioforscher.pmw.api.LinearAlgebra;
 import de.bioforscher.pmw.api.ModelConverter;
@@ -13,7 +12,7 @@ import de.bioforscher.pmw.model.Protein;
 @Deprecated
 public class DefaultHelixInteractionAnnotator extends AbstractFeatureProvider implements Annotator {
 
-	public DefaultHelixInteractionAnnotator(FeatureExtractor featureExtractor, Logger logger, LinearAlgebra linearAlgebra, ModelConverter modelConverter) {
+	public DefaultHelixInteractionAnnotator(FeatureExtractor featureExtractor, LogService logger, LinearAlgebra linearAlgebra, ModelConverter modelConverter) {
 		super(featureExtractor, logger, linearAlgebra, modelConverter, new FeatureType[] { null, null });
 //		super(new FeatureType[] { FeatureType.HELIX_HELIX_INTERACTION_ANNOTATION }, FeatureType.HELIX_ANNOTATION, FeatureType.RESIDUE_CONTACTS);
 	}

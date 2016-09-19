@@ -8,8 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-
+import org.osgi.service.log.LogService;
 import de.bioforscher.pmw.api.LinearAlgebra;
 import de.bioforscher.pmw.api.ModelConverter;
 import de.bioforscher.pmw.model.Atom;
@@ -29,6 +28,7 @@ import de.bioforscher.pmw.reconstruction.factory.ReconstructionAlgorithm;
 public class BackboneBuildingFromQuadrilaterals implements ReconstructionAlgorithm {
 	private LinearAlgebra linearAlgebra;
 	private ModelConverter modelConverter;
+	private LogService logger;
 	
 	private static final int QUADRILATERAL_SETOFF = 3;
 	private static final int[] BINS = { 1, 32, 1024, 33, 31, 1025, 1023, 1056, 992, 1057, 1055, 993, 991, 2, 128, 2048, 130, 126, 2050, 2046, 2176, 1920, 2178, 2174, 1922, 1918 };
@@ -37,13 +37,14 @@ public class BackboneBuildingFromQuadrilaterals implements ReconstructionAlgorit
 	private static final int MAX_INDEX = 107221;
 	private static Map<Integer, List<double[]>> quadrilateralLookup;
 	
-	public BackboneBuildingFromQuadrilaterals(Logger logger, LinearAlgebra linearAlgebra, ModelConverter modelConverter) {
+	public BackboneBuildingFromQuadrilaterals(LogService logger, LinearAlgebra linearAlgebra, ModelConverter modelConverter) {
 		if(quadrilateralLookup == null) {
 			initializeLibrary();
 		}
 		
 		this.linearAlgebra = linearAlgebra;
 		this.modelConverter = modelConverter;
+		this.logger = logger;
 	}
 	
 	private Residue createProxyResidue(List<Residue> residues) {
@@ -172,7 +173,7 @@ public class BackboneBuildingFromQuadrilaterals implements ReconstructionAlgorit
 	
 	@Override
 	public void reconstruct(Protein protein) {
-//		System.out.println("bbq sanity check: " + quadrilateralLookup.size());
+		this.logger.log(LogService.LOG_DEBUG, "bbq sanity check: " + quadrilateralLookup.size());
 		for(Chain chain : protein.chains) {
 			List<Residue> residues = chain.residues;
 			if(residues.size() < 4) {
@@ -193,7 +194,6 @@ public class BackboneBuildingFromQuadrilaterals implements ReconstructionAlgorit
 	}
 	
 	private void reconstructFragment(Residue residue1, Residue residue2, Residue residue3, Residue residue4) {
-//		System.out.println("CA of " + residue2.getAminoAcid() + "-" + residue2.getResidueNumber() + " : " + residue2.getAtoms().get(0));
 		List<double[]> fragmentScaffold = lookupSuitableQuadrilateral(residue1, residue2, residue3, residue4);
 		double[] c = fragmentScaffold.get(0);
 		double[] o = fragmentScaffold.get(1);

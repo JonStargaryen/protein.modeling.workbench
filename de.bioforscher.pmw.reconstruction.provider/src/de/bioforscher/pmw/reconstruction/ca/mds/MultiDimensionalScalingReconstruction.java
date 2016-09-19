@@ -2,8 +2,7 @@ package de.bioforscher.pmw.reconstruction.ca.mds;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-
+import org.osgi.service.log.LogService;
 import de.bioforscher.pmw.api.LinearAlgebra;
 import de.bioforscher.pmw.api.ModelConverter;
 import de.bioforscher.pmw.model.Protein;
@@ -22,7 +21,7 @@ public class MultiDimensionalScalingReconstruction implements ReconstructionAlgo
 	private LinearAlgebra linearAlgebra;
 	private ModelConverter modelConverter;
 
-	public MultiDimensionalScalingReconstruction(Logger logger, LinearAlgebra linearAlgebra, ModelConverter modelConverter) {
+	public MultiDimensionalScalingReconstruction(LogService logger, LinearAlgebra linearAlgebra, ModelConverter modelConverter) {
 		this.linearAlgebra = linearAlgebra;
 		this.modelConverter = modelConverter;
 	}
@@ -46,8 +45,6 @@ public class MultiDimensionalScalingReconstruction implements ReconstructionAlgo
 		}
 		
 		for(int i = 0; i < placedAtoms.size(); i++) {
-//			System.out.println(residues.get(i).atoms);
-//			System.out.println(placedAtoms.get(i));
 			this.modelConverter.createAtom(residues.get(i), ModelConverter.BACKBONE_CA_NAME, placedAtoms.get(i));
 		}
 	}

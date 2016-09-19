@@ -8,8 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-
+import org.osgi.service.log.LogService;
 import de.bioforscher.pmw.api.FeatureExtractor;
 import de.bioforscher.pmw.api.LinearAlgebra;
 import de.bioforscher.pmw.api.ModelConverter;
@@ -90,7 +89,7 @@ public class SecondaryStructureElementAnnotator extends AbstractFeatureProvider 
 	private List<BetaBridge> bridges;
 	private Map<Residue, SecStrucState> states;
 
-	public SecondaryStructureElementAnnotator(FeatureExtractor featureExtractor, Logger logger,
+	public SecondaryStructureElementAnnotator(FeatureExtractor featureExtractor, LogService logger,
 			LinearAlgebra linearAlgebra, ModelConverter modelConverter) {
 		super(featureExtractor, logger, linearAlgebra, modelConverter,
 				new FeatureType[] { FeatureType.SECONDARY_STRUCTURE });

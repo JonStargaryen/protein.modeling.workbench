@@ -3,8 +3,7 @@ package de.bioforscher.pmw.feature.extractor.motif;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-
+import org.osgi.service.log.LogService;
 import de.bioforscher.pmw.api.FeatureExtractor;
 import de.bioforscher.pmw.api.LinearAlgebra;
 import de.bioforscher.pmw.api.ModelConverter;
@@ -20,7 +19,7 @@ import de.bioforscher.pmw.model.Topology;
 
 public class DefaultSequenceMotifAnnotator extends AbstractFeatureProvider implements Annotator {
     
-	public DefaultSequenceMotifAnnotator(FeatureExtractor featureExtractor, Logger logger, LinearAlgebra linearAlgebra, ModelConverter modelConverter) {
+	public DefaultSequenceMotifAnnotator(FeatureExtractor featureExtractor, LogService logger, LinearAlgebra linearAlgebra, ModelConverter modelConverter) {
 		super(featureExtractor, logger, linearAlgebra, modelConverter, new FeatureType[] {FeatureType.MOTIF_ANNOTATION});
 	}
 

@@ -5,8 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-
+import org.osgi.service.log.LogService;
 import de.bioforscher.pmw.api.FeatureExtractor;
 import de.bioforscher.pmw.api.LinearAlgebra;
 import de.bioforscher.pmw.api.ModelConverter;
@@ -39,7 +38,7 @@ import de.bioforscher.pmw.model.Residue;
  */
 public class AccessibleSurfaceAreaCalculator extends AbstractFeatureProvider implements Annotator {
 
-	public AccessibleSurfaceAreaCalculator(FeatureExtractor featureExtractor, Logger logger, LinearAlgebra linearAlgebra, ModelConverter modelConverter) {
+	public AccessibleSurfaceAreaCalculator(FeatureExtractor featureExtractor, LogService logger, LinearAlgebra linearAlgebra, ModelConverter modelConverter) {
 		super(featureExtractor, logger, linearAlgebra, modelConverter, new FeatureType[] { FeatureType.ACCESSIBLE_SURFACE_AREA });
 	}
 	

@@ -3,7 +3,7 @@ package de.bioforscher.pmw.reconstruction.provider;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import org.slf4j.Logger;
+import org.osgi.service.log.LogService;
 
 import de.bioforscher.pmw.api.LinearAlgebra;
 import de.bioforscher.pmw.api.ModelConverter;
@@ -22,14 +22,18 @@ public class ReconstructionServiceImpl implements ReconstructionService {
 	private LinearAlgebra linearAlgebra;
 	@Reference
 	private ModelConverter modelConverter;
-	@Reference
-	private Logger logger;
-	
 	private CoordinateReconstructionAlgorithmFactory factory;
+	
+	private LogService log;
+	
+	@Reference
+	public void setLogService(LogService log) {
+		this.log = log;
+	}
 	
 	@Activate
 	public void activate() {
-		this.factory = new CoordinateReconstructionAlgorithmFactory(this.logger, this.linearAlgebra, this.modelConverter);
+		this.factory = new CoordinateReconstructionAlgorithmFactory(this.log, this.linearAlgebra, this.modelConverter);
 	}
 	
 	@Override
@@ -72,9 +76,9 @@ public class ReconstructionServiceImpl implements ReconstructionService {
 		}
 		
 		int previousAtomCount = this.modelConverter.getAtoms(protein).size();
-		this.logger.info("employing " + reconstructionAlgorithm.getClass().getSimpleName() + " to reconstruct " + reconstructionLevel.name());
+		this.log.log(LogService.LOG_DEBUG, "employing " + reconstructionAlgorithm.getClass().getSimpleName() + " to reconstruct " + reconstructionLevel.name());
 		reconstructionAlgorithm.reconstruct(protein);
-		this.logger.info("reconstructed protein from " + previousAtomCount + " to " + this.modelConverter.getAtoms(protein).size() + " atoms");
+		this.log.log(LogService.LOG_DEBUG, "reconstructed protein from " + previousAtomCount + " to " + this.modelConverter.getAtoms(protein).size() + " atoms");
 
 		if(requiresReassignment) {
 			// reassign serials implies rearranging the atoms

@@ -1,7 +1,6 @@
 package de.bioforscher.pmw.reconstruction.factory;
 
-import org.slf4j.Logger;
-
+import org.osgi.service.log.LogService;
 import de.bioforscher.pmw.api.LinearAlgebra;
 import de.bioforscher.pmw.api.ModelConverter;
 import de.bioforscher.pmw.reconstruction.backbone.bbq.BackboneBuildingFromQuadrilaterals;
@@ -10,11 +9,11 @@ import de.bioforscher.pmw.reconstruction.md.annealing.SimulatedAnnealing;
 import de.bioforscher.pmw.reconstruction.sidechain.pulchra.Pulchra;
 
 public class CoordinateReconstructionAlgorithmFactory {
-	private Logger logger;
+	private LogService logger;
 	private LinearAlgebra linearAlgebra;
 	private ModelConverter modelConverter;
 	
-	public CoordinateReconstructionAlgorithmFactory(Logger logger, LinearAlgebra linearAlgebra, ModelConverter modelConverter) {
+	public CoordinateReconstructionAlgorithmFactory(LogService logger, LinearAlgebra linearAlgebra, ModelConverter modelConverter) {
 		this.logger = logger;
 		this.linearAlgebra = linearAlgebra;
 		this.modelConverter = modelConverter;

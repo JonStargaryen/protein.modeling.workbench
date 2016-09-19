@@ -266,11 +266,6 @@ public class ModelConverterImpl implements ModelConverter {
 	private void removeAtoms(Residue residue) {
 		residue.atoms.clear();
 	}
-
-//	@Override
-//	public String updatePdbRepresentation(Protein protein) {
-//		return new SimplePDBConverter().updatePDBRepresentation(protein);
-//	}
 	
 	@Override
 	public void updatePdbRepresentation(Protein protein) {

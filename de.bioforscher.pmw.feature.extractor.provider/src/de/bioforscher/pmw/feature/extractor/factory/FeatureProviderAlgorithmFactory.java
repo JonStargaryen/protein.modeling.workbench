@@ -1,7 +1,6 @@
 package de.bioforscher.pmw.feature.extractor.factory;
 
-import org.slf4j.Logger;
-
+import org.osgi.service.log.LogService;
 import de.bioforscher.pmw.api.FeatureExtractor;
 import de.bioforscher.pmw.api.LinearAlgebra;
 import de.bioforscher.pmw.api.ModelConverter;
@@ -18,11 +17,11 @@ import de.bioforscher.pmw.feature.extractor.topology.ANVIL;
 @SuppressWarnings("deprecation")
 public class FeatureProviderAlgorithmFactory {
 	private FeatureExtractor featureExtractor;
-	private Logger logger;
+	private LogService logger;
 	private LinearAlgebra linearAlgebra;
 	private ModelConverter modelConverter;
 	
-	public FeatureProviderAlgorithmFactory(FeatureExtractor featureExtractor, Logger logger, LinearAlgebra linearAlgebra, ModelConverter modelConverter) {
+	public FeatureProviderAlgorithmFactory(FeatureExtractor featureExtractor, LogService logger, LinearAlgebra linearAlgebra, ModelConverter modelConverter) {
 		this.featureExtractor = featureExtractor;
 		this.logger = logger;
 		this.linearAlgebra = linearAlgebra;

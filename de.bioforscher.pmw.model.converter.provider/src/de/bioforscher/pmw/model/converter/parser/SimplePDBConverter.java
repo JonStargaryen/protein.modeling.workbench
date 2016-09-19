@@ -142,23 +142,6 @@ public class SimplePDBConverter implements PDBConverter {
 			this.currentResidue.atoms.add(atom);
 		}
 	}
-
-//	@Override
-//	public String updatePDBRepresentation(Protein protein) {
-//		StringJoiner pdbRepresentation = new StringJoiner("\n");
-//		for (Chain chain : protein.chains) {
-//			for (Residue residue : chain.residues) {
-//				for (Atom atom : residue.atoms) {
-//					String atomPdbRepresentation = composePdbRepresentation(atom, residue, chain);
-//					atom.pdbRepresentation = atomPdbRepresentation;
-//					pdbRepresentation.add(atomPdbRepresentation);
-//				}
-//			}
-//		}
-//		
-//		protein.pdbRepresentation = pdbRepresentation.toString();
-//		return pdbRepresentation.toString();
-//	}
 	
 	@Override
 	public void updatePdbRepresentation(Protein protein) {

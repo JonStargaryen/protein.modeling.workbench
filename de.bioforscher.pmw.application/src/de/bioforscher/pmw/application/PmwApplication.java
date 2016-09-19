@@ -18,6 +18,7 @@ import de.bioforscher.pmw.model.Project;
 import de.bioforscher.pmw.model.ReconstructionLevel;
 import osgi.enroute.configurer.api.RequireConfigurerExtender;
 import osgi.enroute.google.angular.capabilities.RequireAngularWebResource;
+import osgi.enroute.logger.api.RequireLoggerImplementation;
 import osgi.enroute.rest.api.REST;
 import osgi.enroute.rest.api.RESTRequest;
 import osgi.enroute.twitter.bootstrap.capabilities.RequireBootstrapWebResource;
@@ -27,6 +28,7 @@ import osgi.enroute.webserver.capabilities.RequireWebServerExtender;
 @RequireBootstrapWebResource(resource="css/bootstrap.css")
 @RequireWebServerExtender
 @RequireConfigurerExtender
+@RequireLoggerImplementation
 @Component(name="de.bioforscher.pmw")
 public class PmwApplication implements REST {
 	/** the flag indicating that a file was uploaded (with need to be base64-encoded to be processed by the REST-interface) - this value can also be used to decode the submitted string as e.g. the header information has be removed */

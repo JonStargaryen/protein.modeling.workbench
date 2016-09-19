@@ -6,7 +6,7 @@ import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.stream.Stream;
 
-import org.slf4j.Logger;
+import org.osgi.service.log.LogService;
 import de.bioforscher.pmw.api.FeatureExtractor;
 import de.bioforscher.pmw.api.LinearAlgebra;
 import de.bioforscher.pmw.api.ModelConverter;
@@ -17,13 +17,13 @@ import de.bioforscher.pmw.model.Protein;
 public abstract class AbstractFeatureProvider implements FeatureProvider {
 
 	protected FeatureExtractor featureExtractor;
-	protected Logger logger;
+	protected LogService logger;
 	protected ModelConverter modelConverter;
 	protected LinearAlgebra linearAlgebra;
 	private final FeatureType[] PROVIDED_FEATURES;
 	private final FeatureType[] REQUIRED_FEATURES;
 
-	public AbstractFeatureProvider(FeatureExtractor featureExtractor, Logger logger, LinearAlgebra linearAlgebra,
+	public AbstractFeatureProvider(FeatureExtractor featureExtractor, LogService logger, LinearAlgebra linearAlgebra,
 			ModelConverter modelConverter, FeatureType[] providedFeatures, FeatureType... requiredFeatures) {
 		this.featureExtractor = featureExtractor;
 		this.logger = logger;

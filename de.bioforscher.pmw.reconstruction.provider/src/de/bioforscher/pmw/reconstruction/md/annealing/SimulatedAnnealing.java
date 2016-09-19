@@ -1,6 +1,6 @@
 package de.bioforscher.pmw.reconstruction.md.annealing;
 
-import org.slf4j.Logger;
+import org.osgi.service.log.LogService;
 
 import de.bioforscher.pmw.api.LinearAlgebra;
 import de.bioforscher.pmw.api.ModelConverter;
@@ -27,7 +27,7 @@ public class SimulatedAnnealing implements ReconstructionAlgorithm {
 	private static final double DEFAULT_START_TEMPERATURE = 1000;
 	private static final double DEFAULT_END_TEMPERATURE = 0;
 	
-	public SimulatedAnnealing(Logger logger, LinearAlgebra linearAlgebra, ModelConverter modelConverter) {
+	public SimulatedAnnealing(LogService logger, LinearAlgebra linearAlgebra, ModelConverter modelConverter) {
 		this.modelConverter = modelConverter;
 	}
 

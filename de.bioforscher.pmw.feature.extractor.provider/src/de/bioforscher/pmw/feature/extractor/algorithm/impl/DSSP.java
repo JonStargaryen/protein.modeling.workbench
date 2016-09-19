@@ -6,8 +6,7 @@ import java.nio.file.Files;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 
-import org.slf4j.Logger;
-
+import org.osgi.service.log.LogService;
 import de.bioforscher.pmw.api.FeatureExtractor;
 import de.bioforscher.pmw.api.LinearAlgebra;
 import de.bioforscher.pmw.api.ModelConverter;
@@ -27,7 +26,7 @@ import de.bioforscher.pmw.model.Residue;
 @Deprecated
 public class DSSP extends AbstractFeatureProvider implements InplaceExecution, Annotator {
     
-	public DSSP(FeatureExtractor featureExtractor, Logger logger, LinearAlgebra linearAlgebra, ModelConverter modelConverter) {
+	public DSSP(FeatureExtractor featureExtractor, LogService logger, LinearAlgebra linearAlgebra, ModelConverter modelConverter) {
 		super(featureExtractor, logger, linearAlgebra, modelConverter, new FeatureType[] { FeatureType.ACCESSIBLE_SURFACE_AREA, FeatureType.SECONDARY_STRUCTURE });
 	}
 
