@@ -48,10 +48,10 @@ public class Pulchra implements ReconstructionAlgorithm {
 	
 	private static final double BIN_SIZE = 0.3;
 	private static final String BASE_PATH = "de/bioforscher/pmw/reconstruction/sidechain/pulchra/";
-	private static final String ROT_STAT_IDX_LIBRARY = BASE_PATH + "rot_data_idx.h";
-	private static final String ROT_STAT_COORDS_LIBRARY = BASE_PATH + "rot_data_coords.h";
+	private static final String ROT_STAT_IDX_LIBRARY = BASE_PATH + "rot_data_idx.dat";
+	private static final String ROT_STAT_COORDS_LIBRARY = BASE_PATH + "rot_data_coords.dat";
 	@SuppressWarnings("unused")
-	private static final String ROT_STAT_LIBRARY = BASE_PATH + "nco_data.h";
+	private static final String ROT_STAT_LIBRARY = BASE_PATH + "nco_data.dat";
 
 	private static Map<String, String[]> sideChainAtomNames;
 	private static List<int[]> rotStatIdx;
