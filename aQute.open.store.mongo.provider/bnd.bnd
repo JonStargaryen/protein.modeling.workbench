@@ -1,5 +1,5 @@
 Bundle-Description: A modified version of the mongoDB store. Not caring about writeresult errors \
-	atm :x
+	atm :x Really minimal effort put into migrating version 2.x to 3.x.
 	
 
 
