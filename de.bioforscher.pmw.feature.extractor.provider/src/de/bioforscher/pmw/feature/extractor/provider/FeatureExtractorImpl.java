@@ -1,7 +1,5 @@
 package de.bioforscher.pmw.feature.extractor.provider;
 
-import java.util.Arrays;
-
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -73,7 +71,7 @@ public class FeatureExtractorImpl implements FeatureExtractor {
 			// recursively generate required features
 			FeatureType[] missingFeatures = featureProvider.checkForMissingRequirements(protein);
 			computeFeatures(protein, missingFeatures);
-			this.logger.log(LogService.LOG_INFO, "using " + featureProvider.getClass().getSimpleName() + " to generate " + Arrays.toString(featuresToCompute));
+			this.logger.log(LogService.LOG_INFO, "using " + featureProvider.getClass().getSimpleName() + " to generate " + featureOption);
 			featureProvider.computeFeature(protein);
 		}
 	}
