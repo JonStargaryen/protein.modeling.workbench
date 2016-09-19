@@ -26,12 +26,12 @@ Specifies the capabilities of all services (which can be found in subsequently l
 ## Application
 Ties back- and front-end and describes the application on a general level as well as provides the entry point.
 #### back-end
-exposes access to the database and implemented computations via a REST interface
+exposes access to the database and implemented computations via a 'REST' interface
 #### front-end
 provides an angularJS UI and visualizes the results
 
 ## Common
-Implementation of linear algebra functions utilized for computations by other services.
+Implementation of 'LinearAlgebra' functions utilized for computations by other services.
 
 ## Contact
 Stub which potentially predict residue-residue, fragment-fragment, motif-motif and helix-helix interactions which are the foundation for the reconstruction cascade.
@@ -40,14 +40,14 @@ Stub which potentially predict residue-residue, fragment-fragment, motif-motif a
 Can be used to compute features describing residues in more detail (e.g. accessible surface area or secondary structure information).
 
 ## Model
-The model of the application. Root element are projects (1 job submitted by the user to the application). Projects contain proteins which contain chains which contain residues which contain atoms. Everything all the way potentially has additional information attached to it.
+The model of the application. Root element is a 'Project' (1 job submitted by the user to the application). Projects contain proteins which contain chains which contain residues which contain atoms. Everything all the way potentially has additional information attached to it.
 
 ## Model Converter
 Can be used to modify the model and work efficiently/conveniently with it. Keywords include:
 #### create
 new model project instances: either by sequence or PDB file
 #### update
-PDB representation of protein and residue objects - each stores its relevant information in a PDB-formatted ATOM record
+PDB representation of protein and residue objects - each stores its relevant information in a PDB-formatted 'ATOM' record
 #### convert
 of 3-letter and 1-letter codes (the model stores 3-letter codes)
 #### get
@@ -56,7 +56,7 @@ convenient access to residue and atom objects of a protein - backbone atoms have
 defined atoms or residues from the structure
 
 ## Model Persistance
-Defines CRUD-operations for the model. It depends on a running MongoDB server.
+Defines CRUD-operations for the model. Depends on a running MongoDB server.
 
 ## Reconstruction
 Can reconstruct protein structures in small steps. Typically, predicted contacts are used to compose a distance matrix which describes the distances between all CA atoms of a structure. These information is the foundation of the reconstruction process consisting of multiple steps:
