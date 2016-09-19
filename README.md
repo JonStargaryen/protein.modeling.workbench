@@ -1,5 +1,21 @@
 # Protein Modeling Workbench
 A Java-based membrane __Protein Modeling Workbench (PMW)__. The aim is predict the three-dimensional structure of membrane protein sequences and provide an interactive front-end which allows for the visualization of the results and the pieces of information which were utilized in the reconstruction process.
+
+# Demo
+Stay tuned for a demo of the current implementation.
+
+# Developing
+To be honest - getting this project running is not trivial (even though bndtools & OSGi enroute help a lot).
+__IDE requirements__:
+* eclipse
+* bndtools plugin (https://dl.bintray.com/bndtools/bndtools/3.2.0)
+* a bnd/cnf-workspace (this is also possible in IntelliJ IDEA, however compiling the project is significantly slower)
+* to get started, you can follow [this tutorial](http://enroute.osgi.org/qs/050-start.html) and ensure that their example application is running
+
+__pmw__:
+* clone the repo into the bnd-workspace
+* get a [MongoDB Server](https://www.mongodb.com/de) up and running
+
 # Bundles
 The application is implemented in a rudimentary service-oriented manner. This allows for modularity and dependency injection.
 
