@@ -40,7 +40,7 @@ public class PmwApplication implements REST {
 	 * TODO move these to config
 	 */
 	private static final boolean SUPPRESS_FRAMEWORK_MESSAGES = true;
-	private static final int LOG_LEVEL = LogService.LOG_DEBUG;
+	private static final int LOG_LEVEL = LogService.LOG_INFO;
 	
 	@Reference
 	private FeatureExtractor featureExtractorService;

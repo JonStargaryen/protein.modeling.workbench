@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.DoubleSummaryStatistics;
 import java.util.List;
+import java.util.stream.DoubleStream;
 import java.util.stream.Stream;
 
 import org.osgi.service.log.LogService;
@@ -150,21 +151,22 @@ public abstract class AbstractFeatureProvider implements FeatureProvider {
 
 	protected void normalizeValues(Protein protein) {
 		for (FeatureType featureType : this.getProvidedFeatures()) {
-			DoubleSummaryStatistics summary = this.modelConverter.getResidues(protein).stream()
-					.map(r -> r.features.get(featureType.name())).mapToDouble(r -> r[0]).summaryStatistics();
-			final double min = summary.getMin();
-			final double max = summary.getMax();
-//			System.out.println(featureType.name() + " - min : " + min + " - max : " + max + " - sum : " + summary.getSum());
+			DoubleSummaryStatistics summary;
+			if(featureType.isDiscrete()) {
+				// in case of discrete features, normalize by the number of entries in the given/backing enum
+				summary = DoubleStream.of(0, featureType.getNumberOfDiscreteValues() - 1).summaryStatistics();
+			} else {
+				// if we have actually interesting values: create statistic
+				summary = this.modelConverter.getResidues(protein).stream().map(r -> r.features.get(featureType.name())).mapToDouble(r -> r[0]).summaryStatistics();
+			}		
 
-			this.modelConverter.getResidues(protein).stream().map(r -> r.features.get(featureType.name()))
-					.forEach(f -> {
-						f[1] = (f[0] - min) / (max - min);
-						// some safety net, so no NaNs are propagated to the
-						// front-end
-						if (Double.isNaN(f[1])) {
-							f[1] = 0.0;
-						}
-					});
+			this.modelConverter.getResidues(protein).stream().map(r -> r.features.get(featureType.name())).forEach(f -> {
+				f[1] = (f[0] - summary.getMin()) / (summary.getMax() - summary.getMin());
+				// some safety net, so no NaNs are propagated to the front-end
+				if (Double.isNaN(f[1])) {
+					f[1] = 0.0;
+				}
+			});
 		}
 	}
 

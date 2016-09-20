@@ -142,10 +142,10 @@ public class SecondaryStructureElementAnnotator extends AbstractFeatureProvider 
 	}
 	
 	private void updateSheets() {
-//		System.out.println(" got " + this.ladders.size() + " ladders!");
+		this.logger.log(LogService.LOG_DEBUG, " got " + this.ladders.size() + " ladders!");
 
 		for(Ladder ladder : this.ladders){
-//			System.out.println(ladder.toString());
+			this.logger.log(LogService.LOG_DEBUG, ladder.toString());
 
 			for (int lcount = ladder.getFrom(); lcount <= ladder.getTo(); lcount++) {
 				SecStrucState state = this.states.get(this.residues.get(lcount));
@@ -207,7 +207,7 @@ public class SecondaryStructureElementAnnotator extends AbstractFeatureProvider 
 				if(hasBulge(l1, l2)) {
 					l1.setConnectedTo(j);
 					l2.setConnectedFrom(i);
-//					System.out.println("Bulge from " + i + " to " + j);
+					this.logger.log(LogService.LOG_DEBUG, "Bulge from " + i + " to " + j);
 				}
 			}
 		}
@@ -342,7 +342,6 @@ public class SecondaryStructureElementAnnotator extends AbstractFeatureProvider 
 				double distance = this.linearAlgebra.distanceFast(
 						this.modelConverter.getCA(res1).xyz,
 						this.modelConverter.getCA(res2).xyz);
-				// TODO: check this
 				if (distance > CA_MIN_DIST_SQUARED) {
 					continue;
 				}
@@ -422,7 +421,7 @@ public class SecondaryStructureElementAnnotator extends AbstractFeatureProvider 
 		boolean b2 = this.states.get(this.residues.get(j)).addBridge(bridge);
 
 		if (!b1 && !b2) {
-//			System.out.println("Ignoring Bridge between residues" + i + " and " + j + ". DSSP assignment might differ.");
+			this.logger.log(LogService.LOG_DEBUG, "Ignoring Bridge between residues" + i + " and " + j + ". DSSP assignment might differ.");
 		}
 
 		this.bridges.add(bridge);
@@ -525,17 +524,17 @@ public class SecondaryStructureElementAnnotator extends AbstractFeatureProvider 
 	 */
 	private void checkSetHelix(int n, SecondaryStructure type) {
 		int idx = n - 3;
-//		System.out.println("Set helix " + type + " " + n + " " + idx);
+		this.logger.log(LogService.LOG_DEBUG, "Set helix " + type + " " + n + " " + idx);
 
 		for (int i = 1; i < this.residues.size() - n; i++) {
 			SecStrucState state = this.states.get(this.residues.get(i));
 			SecStrucState previousState = this.states.get(this.residues.get(i - 1));
 
 			// Check that no other helix was assgined to this range
-			if (state.getSecondaryStructure().compareTo(type) < 0) {
+			if (state.getSecondaryStructure().compareTo(type) > 0) {
 				continue;
 			}
-			if (this.states.get(this.residues.get(i + 1)).getSecondaryStructure().compareTo(type) < 0) {
+			if (this.states.get(this.residues.get(i + 1)).getSecondaryStructure().compareTo(type) > 0) {
 				continue;
 			}
 
@@ -568,7 +567,7 @@ public class SecondaryStructureElementAnnotator extends AbstractFeatureProvider 
 
 				// Check for H bond from NH(i+n) to CO(i)
 				if (isBonded(i, i + turn)) {
-//					System.out.println("Turn at (" + i + "," + (i + turn) + ") turn " + turn);
+					this.logger.log(LogService.LOG_DEBUG, "Turn at (" + i + "," + (i + turn) + ") turn " + turn);
 					this.states.get(this.residues.get(i)).setTurn('>', turn);
 					this.states.get(this.residues.get(i + turn)).setTurn('<', turn);
 					// Bracketed residues get the helix number
@@ -614,7 +613,7 @@ public class SecondaryStructureElementAnnotator extends AbstractFeatureProvider 
 				|| (acc1p == i && acc1e < HBONDHIGHENERGY) || (acc2p == i && acc2e < HBONDHIGHENERGY);
 
 		if (hbond) {
-//			System.out.println("*** H-bond from CO of " + i + " to NH of " + j);
+			this.logger.log(LogService.LOG_DEBUG, "*** H-bond from CO of " + i + " to NH of " + j);
 			return true;
 		}
 		return false;
@@ -664,11 +663,11 @@ public class SecondaryStructureElementAnnotator extends AbstractFeatureProvider 
 			for (int j = i + 1; j < this.residues.size(); j++) {
 				Residue res1 = this.residues.get(i);
 				Residue res2 = this.residues.get(j);
-				double distance = this.linearAlgebra.distanceFast(
+				double squaredDistance = this.linearAlgebra.distanceFast(
 						this.modelConverter.getCA(res1).xyz,
 						this.modelConverter.getCA(res2).xyz);
 				// TODO: check this
-				if (distance > CA_MIN_DIST_SQUARED) {
+				if (squaredDistance > CA_MIN_DIST_SQUARED) {
 					continue;
 				}
 				checkAddHBond(res1, res2);
@@ -681,11 +680,11 @@ public class SecondaryStructureElementAnnotator extends AbstractFeatureProvider 
 
 	private void checkAddHBond(Residue res1, Residue res2) {
 		if (res1.aminoAcid.equals("PRO")) {
-//			System.out.println("Ignore: PRO " + res1.residueNumber);
+			this.logger.log(LogService.LOG_DEBUG, "Ignore: PRO " + res1.residueNumber);
 			return;
 		}
 		if (!hasBackboneHydrogen(res1)) {
-//			System.out.println("Residue " + res1.residueNumber + " has no H");
+			this.logger.log(LogService.LOG_DEBUG, "Residue " + res1.residueNumber + " has no H");
 			return;
 		}
 
@@ -694,10 +693,10 @@ public class SecondaryStructureElementAnnotator extends AbstractFeatureProvider 
 		try {
 			energy = calculateHBondEnergy(res1, res2);
 		} catch (Exception e) {
-//			System.out.println("Energy calculation failed" + e);
+			this.logger.log(LogService.LOG_WARNING, "Energy calculation failed" + e);
 			return;
 		}
-//		System.out.println("Energy between positions (" + res1.residueNumber + "," + res2.residueNumber + "): " + energy);
+		this.logger.log(LogService.LOG_DEBUG, "Energy between positions (" + res1.residueNumber + "," + res2.residueNumber + "): " + energy);
 
 		trackHBondEnergy(res1, res2, energy);
 	}
@@ -708,7 +707,7 @@ public class SecondaryStructureElementAnnotator extends AbstractFeatureProvider 
 	 */
 	private void trackHBondEnergy(Residue res1, Residue res2, double energy) {
 		if (res1.aminoAcid.equals("PRO")) {
-//			System.out.println("Ignore: PRO " + res1.residueNumber);
+			this.logger.log(LogService.LOG_DEBUG, "Ignore: PRO " + res1.residueNumber);
 			return;
 		}
 
@@ -724,7 +723,7 @@ public class SecondaryStructureElementAnnotator extends AbstractFeatureProvider 
 
 		// Acceptor: N-H-->O
 		if (energy < acc1e) {
-//			System.out.println(energy + "<" + acc1e);
+			this.logger.log(LogService.LOG_DEBUG, energy + "<" + acc1e);
 			state1.setAccept2(state1.getAccept1());
 
 			HBond bond = new HBond();
@@ -733,7 +732,7 @@ public class SecondaryStructureElementAnnotator extends AbstractFeatureProvider 
 
 			state1.setAccept1(bond);
 		} else if (energy < acc2e) {
-//			System.out.println(energy + "<" + acc2e);
+			this.logger.log(LogService.LOG_DEBUG, energy + "<" + acc2e);
 
 			HBond bond = new HBond();
 			bond.setEnergy(energy);
@@ -744,7 +743,7 @@ public class SecondaryStructureElementAnnotator extends AbstractFeatureProvider 
 
 		// The other side of the bond: donor O-->N-H
 		if (energy < don1e) {
-//			System.out.println(energy + "<" + don1e);
+			this.logger.log(LogService.LOG_DEBUG, energy + "<" + don1e);
 			state2.setDonor2(state2.getDonor1());
 
 			HBond bond = new HBond();
@@ -753,7 +752,7 @@ public class SecondaryStructureElementAnnotator extends AbstractFeatureProvider 
 
 			state2.setDonor1(bond);
 		} else if (energy < don2e) {
-//			System.out.println(energy + "<" + don2e);
+			this.logger.log(LogService.LOG_DEBUG, energy + "<" + don2e);
 
 			HBond bond = new HBond();
 			bond.setEnergy(energy);
@@ -787,9 +786,9 @@ public class SecondaryStructureElementAnnotator extends AbstractFeatureProvider 
 		double dho = this.linearAlgebra.distance(o, h);
 		double dnc = this.linearAlgebra.distance(c, n);
 
-//		System.out.println("     cccc: " + res1.residueNumber + " " + res1.aminoAcid + " " + res2.residueNumber + " " + 
-//				res2.aminoAcid + String.format( " O (" + oAtom.pdbSerial + ")..N (" + nAtom.pdbSerial + 
-//						"):%4.1f  |  ho:%4.1f - hc:%4.1f + nc:%4.1f - no:%4.1f ", dno, dho, dhc, dnc, dno));
+		this.logger.log(LogService.LOG_DEBUG, "     cccc: " + res1.residueNumber + " " + res1.aminoAcid + " " + res2.residueNumber + " " + 
+				res2.aminoAcid + String.format( " O (" + oAtom.pdbSerial + ")..N (" + nAtom.pdbSerial + 
+						"):%4.1f  |  ho:%4.1f - hc:%4.1f + nc:%4.1f - no:%4.1f ", dno, dho, dhc, dnc, dno));
 
 		// there seems to be a contact!
 		if ((dno < MINDIST) || (dhc < MINDIST) || (dnc < MINDIST) || (dno < MINDIST)) {
@@ -801,8 +800,8 @@ public class SecondaryStructureElementAnnotator extends AbstractFeatureProvider 
 
 		double energy = e1 + e2;
 
-//		System.out.println(String.format("      N (%d) O(%d): %4.1f : %4.2f ", nAtom.pdbSerial, oAtom.pdbSerial,
-//				(float) dno, energy));
+		this.logger.log(LogService.LOG_DEBUG, String.format("      N (%d) O(%d): %4.1f : %4.2f ", nAtom.pdbSerial, oAtom.pdbSerial,
+				(float) dno, energy));
 
 		// Avoid too strong energy
 		if (energy > HBONDLOWENERGY) {
@@ -846,9 +845,11 @@ public class SecondaryStructureElementAnnotator extends AbstractFeatureProvider 
 		double[] o = this.modelConverter.getO(res1).xyz;
 		double[] n = this.modelConverter.getN(res2).xyz;
 
-		double[] xyz = this.linearAlgebra.subtract(c, o);
-		double distance = this.linearAlgebra.distance(o, c);
-		xyz = this.linearAlgebra.divide(this.linearAlgebra.add(n, xyz), distance);
+//		double[] xyz = this.linearAlgebra.subtract(c, o);
+//		double distance = this.linearAlgebra.distance(o, c);
+//		xyz = this.linearAlgebra.divide(this.linearAlgebra.add(n, xyz), distance);
+		
+		double[] xyz = this.linearAlgebra.add(n, this.linearAlgebra.divide(this.linearAlgebra.subtract(c, o), this.linearAlgebra.distance(o, c)));
 
 		Atom h = new Atom();
 		h.xyz = xyz;

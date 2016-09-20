@@ -27,4 +27,10 @@ public class Residue extends DTO {
 //		this.features = new EnumMap<>(FeatureType.class);
 		this.features = new HashMap<>();
 	}
+	
+	
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName() + " name='" + this.aminoAcid + "' resNum='" + this.residueNumber + "' size='" + this.atoms.size() + "'";
+	}
 }

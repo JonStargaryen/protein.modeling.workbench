@@ -25,4 +25,9 @@ public class Protein extends DTO {
 		this.contacts = new ArrayList<>();
 		this.interactions = new ArrayList<>();
 	}
+	
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName() + " name='" + this.name + "' size='" + this.size + "'";
+	}
 }

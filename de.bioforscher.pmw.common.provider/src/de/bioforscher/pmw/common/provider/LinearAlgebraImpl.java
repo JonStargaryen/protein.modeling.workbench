@@ -18,14 +18,14 @@ public class LinearAlgebraImpl implements LinearAlgebra {
 
 	@Override
 	public double angle(double[] v1, double[] v2) {
-		double vDot = dotProduct(v1, v2) / (v1.length * v2.length);
+		double vDot = dotProduct(v1, v2) / (norm(v1) * norm(v2));
 		if (vDot < -1.0) {
 			vDot = -1.0;
 		}
 		if (vDot > 1.0) {
 			vDot = 1.0;
 		}
-		return ((double) (Math.acos(vDot)));
+		return Math.toDegrees((double) Math.acos(vDot));
 	}
 
 	@Override

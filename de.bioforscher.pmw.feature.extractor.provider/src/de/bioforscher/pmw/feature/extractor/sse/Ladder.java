@@ -77,4 +77,9 @@ public class Ladder {
 	public void setTo(int to) {
 		this.to = to;
 	}
+	
+	@Override
+	public String toString() {
+		return "Ladder [from=" + from + ", to=" + to + ", lfrom=" + lfrom + ", lto=" + lto + ", btype=" + btype + ", connectedTo=" + connectedTo + ", connectedFrom=" + connectedFrom + "]";
+	}
 }
