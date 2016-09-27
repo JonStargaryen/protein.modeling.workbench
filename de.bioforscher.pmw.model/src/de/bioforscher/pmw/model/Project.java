@@ -14,7 +14,9 @@ public class Project extends DTO {
 	public String _id;
 	public long date;
 	public List<Protein> proteins;
-	public String sequence;
+	// removed sequence - now the first protein is the general information container :x - maybe make that a dedicated field - let's see
+//	public String sequence;
+	public String name;
 	
 	public Project() {
 		this.proteins = new ArrayList<>();

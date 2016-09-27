@@ -206,9 +206,9 @@ public class BackboneBuildingFromQuadrilaterals implements ReconstructionAlgorit
 				this.modelConverter.getCA(residue3).xyz);
 		
 		// create and add atom
-		this.modelConverter.createAtom(residue1, "C", this.linearAlgebra.rototranslate(c, translation, rotation));
-		this.modelConverter.createAtom(residue1, "O", this.linearAlgebra.rototranslate(o, translation, rotation));
-		this.modelConverter.createAtom(residue2, "N", this.linearAlgebra.rototranslate(n, translation, rotation));
+		this.modelConverter.createAtom(residue1, "C", this.linearAlgebra.transform(c, translation, rotation));
+		this.modelConverter.createAtom(residue1, "O", this.linearAlgebra.transform(o, translation, rotation));
+		this.modelConverter.createAtom(residue2, "N", this.linearAlgebra.transform(n, translation, rotation));
 
 		// cannot perform these options for glycines without CB
 		//TODO: trust BBQ or PULCHRA more?

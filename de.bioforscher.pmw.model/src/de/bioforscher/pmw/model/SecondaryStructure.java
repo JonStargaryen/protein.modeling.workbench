@@ -8,15 +8,6 @@ package de.bioforscher.pmw.model;
  */
 public enum SecondaryStructure {
 	COIL,
-	BEND,
-	TURN,
-	PIHELIX,
-	THREE10HELIX,
-	BRIDGE,
-	EXTENDED,
-	ALPHA_HELIX;
-	
-	public boolean isHelixType() {
-		return this.name().contains("HELIX");
-	}
+	STRAND,
+	HELIX
 }

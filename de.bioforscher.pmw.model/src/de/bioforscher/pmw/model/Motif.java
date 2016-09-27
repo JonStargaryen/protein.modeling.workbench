@@ -22,4 +22,9 @@ public class Motif extends DTO {
 	 */
 	public int startResidueId;
 	public int endResidueId;
+	
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName() + " sequence='" + this.sequence + "' start='" + this.startResidueId + "' end='" + this.endResidueId + "'";
+	}
 }

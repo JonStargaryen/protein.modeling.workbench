@@ -27,11 +27,12 @@ public class LinearAlgebraImpl implements LinearAlgebra {
 		}
 		return Math.toDegrees((double) Math.acos(vDot));
 	}
-
+	
 	@Override
 	public double distance(double[] v1, double[] v2) {
 		return Math.sqrt(distanceFast(v1, v2));
 	}
+	
 	@Override
 	public double distance14(double[] v1, double[] v2, double[] v3, double[] v4) {
 		double d14 = distance(v1, v4);
@@ -71,6 +72,22 @@ public class LinearAlgebraImpl implements LinearAlgebra {
 	public double[] multiply(double[] v, double scalar) {
 		return new double[] { v[0] * scalar, v[1] * scalar, v[2] * scalar};
 	}
+	
+	@Override
+	public double[] multiply(double[] v, double[][] m) {
+		//TODO maybe some dedicated version for 3d vectors would be nice
+        double[] product = new double[v.length];
+        for (int rowIndex = 0; rowIndex < v.length; rowIndex++) {
+            double sum = 0;
+            // iterate over the columns of the matrix
+            for (int columnIndex = 0; columnIndex < v.length; columnIndex++) {
+                // iterate over the vector
+                sum += v[columnIndex] * m[rowIndex][columnIndex];
+            }
+            product[rowIndex] = sum;
+        }
+        return product;
+	}
 
 	@Override
 	public double norm(double[] v) {
@@ -98,16 +115,18 @@ public class LinearAlgebraImpl implements LinearAlgebra {
 	}
 
 	@Override
-	public double[] rototranslate(double[] vector, double[] translation, double[][] rotation) {
+	public double[] transform(double[] vector, double[] translation, double[][] rotation) {
 	    double[] result = new double[3];
-		double oldX = vector[0];
-	    double oldY = vector[1];
-	    double oldZ = vector[2];
-	    result[0] = (oldX * rotation[0][0] + oldY * rotation[1][0] + oldZ * rotation[2][0]) + translation[0];
-	    result[1] = (oldX * rotation[0][1] + oldY * rotation[1][1] + oldZ * rotation[2][1]) + translation[1];
-	    result[2] = (oldX * rotation[0][2] + oldY * rotation[1][2] + oldZ * rotation[2][2]) + translation[2];
+	    result[0] = (rotation[0][0] * vector[0] + rotation[0][1] * vector[1] + rotation[0][2] * vector[2]) + translation[0];
+	    result[1] = (rotation[1][0] * vector[0] + rotation[1][1] * vector[1] + rotation[1][2] * vector[2]) + translation[1];
+	    result[2] = (rotation[2][0] * vector[0] + rotation[2][1] * vector[1] + rotation[2][2] * vector[2]) + translation[2];
 		return result;
 	}
+	
+//	@Override
+//	public double[] transform(double[] v, double[] translation, double[][] rotation) {
+//		return add(multiply(v, rotation), translation);
+//	}
 
 	@Override
 	public double[] subtract(double[] v1, double[] v2) {

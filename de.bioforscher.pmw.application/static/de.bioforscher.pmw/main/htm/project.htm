@@ -4,21 +4,14 @@
 	<!-- the visualizer part on the left -->
 	<div class="visualization">
 		<div class="wrapper">
-			<div class="dropdown-select" title="select feature to color visualization" dropdown-select="features"
-		        dropdown-model="options.coloringFeature"
-		        dropdown-item-label="text">
+			<div class="dropdown-select">
+				some options
 		    </div>
 			
 			<div class="visualization-body">
-				<div id="protein-visualizer" class="visualizer-tab"></div>
-				<div class="visualization-options clearfix">
-					<div class="option fa fa-link right" data-ng-click="options.renderContacts = !options.renderContacts" data-ng-class="{active: options.renderContacts}" title="render residue-residue contacts"></div>
-					<div class="option fa fa-minus right" data-ng-click="options.renderMembrane = !options.renderMembrane" data-ng-class="{active: options.renderMembrane}" title="render membrane layer"></div>
+				<div id="protein-visualizer" class="visualizer-tab">
+					<div style="">click motifs to visualize</div>
 				</div>
-   				<div class="dropdown-select" title="select PV's render mode" dropdown-select="renderModes"
-			        dropdown-model="options.renderMode"
-			        dropdown-item-label="text">
-			    </div>
 			</div>
 		</div>
 	</div>
@@ -28,48 +21,20 @@
 		<div class="wrapper">
 			<!-- general project information -->
 			<div class="sequence-header clearfix">
-				<div data-ng-click="options.renderPDB = !options.renderPDB" data-ng-class="{'fa-minus' : options.renderPDB, 'fa-plus' : !options.renderPDB}" class="option fa"></div>
-				<div title="{{protein.title}}">{{protein.name}}</div>
-				<div class="title">{{protein.title}}</div>
-				<div class="right"></div>
+				<div>{{projectName}}</div>
+				<div>created {{projectDate | date : "MM/dd/yyyy 'at' h:mma"}}</div>
+				<div>{{protein.size}} residues</div>
+				<div>{{proteins.length - 1}} models</div>
 			</div>
 			
-			<div class="tse-scrollable">
-				<div class="tse-content">
-					<!-- the sequence part -->
-					<div data-ng-hide="options.renderPDB" class="sequence-representation">
-						<div class="chain" data-ng-repeat="chain in protein.chains">
-							<div class="chainId residue" title="chain '{{chain.chainId}}'">{{chain.chainId}}</div>
-							<div class="residue" style="color: hsl({{residue.features[options.coloringFeature.raw][1] * 120}}, 60%, 70%);" title="{{residue.aminoAcid}}-{{residue.residueNumber}}" data-ng-repeat="residue in chain.residues">{{residue.aminoAcid | oneLetterCode}}</div>
-						</div>
-						
-						<!-- TODO this could become some directive -->
-						<div class="legend" data-ng-class="{'show' : options.coloringFeature.raw === 'SECONDARY_STRUCTURE'}">
-							<div style="color: hsl({{(secondaryStructure.index / (secondaryStructures.length - 1)) * 120}}, 60%, 70%);" data-ng-repeat="secondaryStructure in secondaryStructures">{{secondaryStructure.text | helixRenaming}}</div>
-						</div>
-						<div class="legend" data-ng-class="{'show' : options.coloringFeature.raw === 'MOTIF_ANNOTATION'}">
-							<div style="color: hsl({{(motifType.index / (motifTypes.length - 1)) * 120}}, 60%, 70%);" data-ng-repeat="motifType in motifTypes">{{motifType.text}}</div>
-						</div>
-						<div class="legend" data-ng-class="{'show' : options.coloringFeature.raw === 'MEMBRANE_TOPOLOGY'}">
-							<div style="color: hsl({{(topology.index / (topologies.length - 1)) * 120}}, 60%, 70%);" data-ng-repeat="topology in topologies">{{topology.text}}</div>
-						</div>
-						<div class="legend" data-ng-class="{'show' : options.coloringFeature.raw === 'INTERACTIONS'}">
-							<div style="color: hsl({{(interactionType.index / (interactionTypes.length - 1)) * 120}}, 60%, 70%);" data-ng-repeat="interactionType in interactionTypes">{{interactionType.text}}</div>
-						</div>
-						<div class="legend" data-ng-class="{'show' : options.coloringFeature.index === 2}">
-							<div style="color: hsl(0, 60%, 70%);">min</div><div style="color: hsl(60, 60%, 70%);">average</div><div style="color: hsl(120, 60%, 70%);">max</div>
-						</div>
-					</div>		
-					
-					<!-- the coordinate part -->
-					<div data-ng-show="options.renderPDB" class="pdb-representation">
-						<div class="chain" data-ng-repeat="chain in protein.chains">
-							<div class="residue" data-ng-repeat="residue in chain.residues">
-								<div class="atom" data-ng-repeat="atom in residue.atoms">{{atom.pdbRepresentation}}</div>
-							</div>
-						</div>
-					</div>
-				</div>
+			<!-- the sequence part -->
+			<div style="overflow: hidden; padding: 20px 10px;">
+				<div class="residue" style="display: inline;" title="{{residue.aminoAcid}}-{{residue.residueNumber}}" data-ng-repeat="residue in protein.chains[0].residues">{{residue.aminoAcid | oneLetterCode}}</div>
+			</div>
+			
+			<!-- the motif part -->				
+			<div data-ng-repeat="motif in protein.motifs">
+				sequence: {{motif.sequence}} - start: {{motif.startResidueId}} - end: {{motif.endResidueId}}
 			</div>
 		</div>
 	</div>

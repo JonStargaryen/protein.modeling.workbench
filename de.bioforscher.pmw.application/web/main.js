@@ -42,6 +42,9 @@
 		$routeProvider.when('/project', {
 			templateUrl: '/de.bioforscher.pmw/main/htm/project.htm'
 		});
+		$routeProvider.when('/protein', {
+			templateUrl: '/de.bioforscher.pmw/main/htm/protein.htm'
+		});
 		$routeProvider.otherwise('/home');
 	}]);
 	
@@ -65,7 +68,7 @@
 			$rootScope.motifTypes = handleConstantSet(d.data.motifTypes);
 			$rootScope.interactionTypes = handleConstantSet(d.data.interactionTypes);
 		}, function (d) {
-			 $scope.alerts.push({ type: 'danger', msg: 'loading global constants from server failed with ['+ d.status + '] '+ d.statusText });
+			 $rootScope.alerts.push({ type: 'danger', msg: 'loading global constants from server failed with ['+ d.status + '] '+ d.statusText });
 		});
 		
 		// 'parses' 1 constant entry set and attaches it to a container
@@ -105,8 +108,11 @@
 				console.log(d.data);
 				var project = angular.fromJson(d.data);
 				$scope.projectId = project._id;
+				$scope.projectName = project.name;
+				$scope.projectDate = project.date;
+				$scope.proteins = project.proteins;
 				$scope.date = project.date;
-				$scope.sequence = project.sequence;
+//				$scope.sequence = project.sequence;
 				// join all atom pdbRepresentations to one linked to the protein object
 				composePdbRepresentation(project.proteins[0]);
 				$scope.protein = project.proteins[0];
@@ -182,6 +188,11 @@
 				background:'#313a41'
 			};
 
+			if($scope.protein.pdbRepresentation === "") {
+				// no atom coordinates - this is a modeling project
+				return;
+			}
+			
 			// ensure container is empty
 			document.getElementById('protein-visualizer').innerHTML = '';
 			
@@ -627,10 +638,11 @@
 	 * handles the upload of user input on the initial project creation page
 	 */
 	MODULE.controller('SubmitController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
-		$scope.sequence;
+		$scope.sequence = 'QITGRPEWIWLALGTALMGLGTLYFLVKGMGVSDPDAKKFYAITTLPAIAFTMYLSMLLGYGLTMVPFGGEQNPIYWARYADWLFTTPLLLLDLALLVDADQGTILALVGADGIMIGTGLVGALTKVYSYRFVWWAISTAAMLYILYVLFFGFTSKAESMRPEVASTFKVLRNVTVVLWSAYPVVWLIGSEGAGIVPLNIETLLFMVLDVSAKVGFGLILLRSRAIFGE';
 		
 		$scope.createProtein = function () {
-			if($scope.sequence) {$http.post('/rest/project/', angular.toJson($scope.sequence)).then(
+			if($scope.sequence) {
+				$http.post('/rest/project/', angular.toJson($scope.sequence)).then(
 				function (d) {
 					$location.path("/project").search({ id: d.data });
 				}, function (d) {
@@ -695,7 +707,7 @@
 	            	fr.onload = function(event) {
 	            		var data = {'file':event.target.result};
 		                httpPostFactory('/rest/project/', data, function (callback) {
-		                	$location.path("/project").search({ id: callback });
+		                	$location.path("/protein").search({ id: callback });
 		                });
 	            	};
 	            	var file = fr.readAsDataURL(element[0].files[0]);

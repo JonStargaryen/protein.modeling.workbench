@@ -22,13 +22,9 @@ public class FeatureExtractorImpl implements FeatureExtractor {
 	private LinearAlgebra linearAlgebra;
 	@Reference
 	private ModelConverter modelConverter;
+	@Reference
 	private LogService logger;
 	private FeatureProviderAlgorithmFactory factory;
-	
-	@Reference
-	public void setLogService(LogService log) {
-		this.logger = log;
-	}
 	
 	@Activate
 	public void activate() {

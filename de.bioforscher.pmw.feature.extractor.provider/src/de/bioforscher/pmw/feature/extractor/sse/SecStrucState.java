@@ -1,7 +1,5 @@
 package de.bioforscher.pmw.feature.extractor.sse;
 
-import de.bioforscher.pmw.model.SecondaryStructure;
-
 /**
  * This class extends the basic container for secondary structure annotation,
  * including all the information used in the DSSP algorithm.
@@ -11,7 +9,7 @@ import de.bioforscher.pmw.model.SecondaryStructure;
  *
  */
 public class SecStrucState {
-	private SecondaryStructure secondaryStructure;
+	private DSSPSecondaryStructureElement secondaryStructure;
 
 	private double phi;
 	private double psi;
@@ -31,7 +29,7 @@ public class SecStrucState {
 	private BetaBridge bridge1;
 	private BetaBridge bridge2;
 
-	public SecStrucState(SecondaryStructure ss) {
+	public SecStrucState(DSSPSecondaryStructureElement ss) {
 		this.secondaryStructure = ss;
 
 		this.phi = 360;
@@ -191,11 +189,11 @@ public class SecStrucState {
 		this.bridge2 = bridge2;
 	}
 
-	public void setSecondaryStructure(SecondaryStructure secondaryStructure) {
+	public void setSecondaryStructure(DSSPSecondaryStructureElement secondaryStructure) {
 		this.secondaryStructure = secondaryStructure;
 	}
 	
-	public SecondaryStructure getSecondaryStructure() {
+	public DSSPSecondaryStructureElement getSecondaryStructure() {
 		return this.secondaryStructure;
 	}
 }

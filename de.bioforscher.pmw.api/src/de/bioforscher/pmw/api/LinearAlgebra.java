@@ -96,6 +96,8 @@ public interface LinearAlgebra {
 	 */
 	double[] multiply(double[] v, double scalar);
 	
+	double[] multiply(double[] v, double[][] m);
+	
 	/**
 	 * the length of this vector
 	 * @param v
@@ -117,7 +119,7 @@ public interface LinearAlgebra {
 	 * @param rotation the matrix describing the wanted rotation
 	 * @return the manipulated coordinates of the input vector
 	 */
-	double[] rototranslate(double[] vector, double[] translation, double[][] rotation);
+	double[] transform(double[] vector, double[] translation, double[][] rotation);
 	
 	/**
 	 * subtracts 2 vectors

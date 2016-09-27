@@ -23,11 +23,8 @@ public class Residue extends DTO {
 	
 	public Residue() {
 		this.atoms = new ArrayList<>();
-		// we could use a EnumMap here, however the MongoDB provider is not capable of processing their keys
-//		this.features = new EnumMap<>(FeatureType.class);
 		this.features = new HashMap<>();
 	}
-	
 	
 	@Override
 	public String toString() {

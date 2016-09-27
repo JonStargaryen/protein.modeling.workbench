@@ -1010,4 +1010,20 @@ public static Matrix read (BufferedReader input) throws java.io.IOException {
 		}
 		return r;
 	}
+	
+	/** Singular Value Decomposition
+	@return     SingularValueDecomposition
+	@see SingularValueDecomposition
+	*/
+	public SingularValueDecomposition svd() {
+		return new SingularValueDecomposition(this);
+	}
+	
+	/** 
+	 * Matrix determinant
+	 * @return     determinant
+	 */
+	public double det() {
+		return new LUDecomposition(this).det();
+	}
 }

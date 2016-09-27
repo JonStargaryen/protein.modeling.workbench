@@ -2,13 +2,15 @@ package de.bioforscher.pmw.application;
 
 import java.util.Base64;
 import org.osgi.dto.DTO;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.log.LogReaderService;
 import org.osgi.service.log.LogService;
-import org.slf4j.Logger;
 
+import de.bioforscher.pmw.api.AlignmentService;
 import de.bioforscher.pmw.api.FeatureExtractor;
+import de.bioforscher.pmw.api.FragmentLibrary;
 import de.bioforscher.pmw.api.ModelConverter;
 import de.bioforscher.pmw.api.ModelPersistence;
 import de.bioforscher.pmw.api.ReconstructionService;
@@ -40,20 +42,29 @@ public class PmwApplication implements REST {
 	 * TODO move these to config
 	 */
 	private static final boolean SUPPRESS_FRAMEWORK_MESSAGES = true;
-	private static final int LOG_LEVEL = LogService.LOG_INFO;
+	private static final int LOG_LEVEL = LogService.LOG_DEBUG;
 	
 	@Reference
 	private FeatureExtractor featureExtractorService;
-	@Reference
-	private Logger logService;
+//	@Reference
+//	private Logger logger;
 	@Reference
 	private ModelConverter modelConverterService;
 	@Reference
 	private ModelPersistence modelPersistenceService;
 	@Reference
 	private ReconstructionService reconstructionService;
+	@Reference
+	private FragmentLibrary fragmentLibrary;
+	@Reference
+	private AlignmentService alignmentService;
 
 	//TODO implement: some 'delta' function would be nice, so not the whole model has to be transfered but rather only the model's changes
+	
+	@Activate
+	public void activate() {
+		System.out.println("starting pmw application");
+	}
 	
 	/*
 	 * the interface to retrieve already persisted projects from the backend
@@ -66,7 +77,7 @@ public class PmwApplication implements REST {
 	 * @throws Exception thrown upon not finding a corresponding job
 	 */
 	public Project getProject(RESTRequest request, String id) throws Exception {
-		return this.modelPersistenceService.retrieve(id);
+		return this.modelPersistenceService.retrieveProject(id);
 	}
 	
 	/*
@@ -84,17 +95,17 @@ public class PmwApplication implements REST {
 	}
 	
 	public String postCalculation(ComputationRequest request) throws Exception {
-		Project project = this.modelPersistenceService.retrieve(request._body().projectId);
+		Project project = this.modelPersistenceService.retrieveProject(request._body().projectId);
 		int value = request._body().value;
 		String context = request._body().context;
 		if(context.equals(FEATURE_CONTEXT)) {
 			this.featureExtractorService.computeFeatures(project.proteins.get(0), FeatureType.values()[value]);
-			this.modelPersistenceService.update(project);
+			this.modelPersistenceService.updateProject(project);
 			return FeatureType.values()[value].name();
 		}
 		if(context.equals(RECONSTRUCTION_CONTEXT)) {
 			this.reconstructionService.reconstruct(project.proteins.get(0), ReconstructionLevel.values()[value]);
-			this.modelPersistenceService.update(project);
+			this.modelPersistenceService.updateProject(project);
 			return ReconstructionLevel.values()[value].name();
 		}
 		
@@ -135,17 +146,25 @@ public class PmwApplication implements REST {
 			
 			// create protein
 			project = this.modelConverterService.createModelingProject(uploadedFileContent);
+			
+			// compute features
+			this.featureExtractorService.computeFeatures(project.proteins.get(0), FeatureType.values());
 		} else {
 			// sequence only specified
-			project = this.modelConverterService.createModelingProject(ModelConverter.DEFAULT_PROTEIN_NAME, ModelConverter.DEFAULT_PROTEIN_TITLE, input);
+			
+			// create new project
+//			project = this.modelConverterService.createModelingProject(ModelConverter.DEFAULT_PROTEIN_NAME, ModelConverter.DEFAULT_PROTEIN_TITLE, input);
+			project = this.modelConverterService.createModelingProject("unnamed modeling project", input);
+			
+			// extract sequence motifs
+			this.featureExtractorService.computeFeatures(project.proteins.get(0), FeatureType.MOTIF_ANNOTATION);
 		}
 		
 //		// async approach
 //		this.modelPersistenceService.create(project);
 //		Executors.newSingleThreadExecutor().submit(() -> this.featureExtractorService.computeFeatures(project.proteins.get(0), FeatureType.values()));
 		
-		this.featureExtractorService.computeFeatures(project.proteins.get(0), FeatureType.values());
-		this.modelPersistenceService.create(project);
+		this.modelPersistenceService.createProject(project);
 		
 		// return id to retrieve object later on
 		return project._id;

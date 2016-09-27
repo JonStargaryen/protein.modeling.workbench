@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<repository increment="1474299323980" name="de.bioforscher.pmw.model" xmlns="http://www.osgi.org/xmlns/repository/v1.0.0">
+<repository increment="1474915420459" name="de.bioforscher.pmw.model" xmlns="http://www.osgi.org/xmlns/repository/v1.0.0">
   <resource>
     <capability namespace="osgi.identity">
       <attribute name="osgi.identity" value="de.bioforscher.pmw.model"/>
@@ -7,9 +7,9 @@
       <attribute name="version" type="Version" value="0.0.0"/>
     </capability>
     <capability namespace="osgi.content">
-      <attribute name="osgi.content" value="8af96cbe8d1a1f3e5f66a7841f0668c931aee4de63f9037b00912385d9a2e551"/>
+      <attribute name="osgi.content" value="1143115819685a0ae52a55709219724662f96078c2c63906c0aec45acde68a3f"/>
       <attribute name="url" value="generated/de.bioforscher.pmw.model.jar"/>
-      <attribute name="size" type="Long" value="26080"/>
+      <attribute name="size" type="Long" value="29690"/>
       <attribute name="mime" value="application/vnd.osgi.bundle"/>
     </capability>
     <capability namespace="osgi.wiring.bundle">

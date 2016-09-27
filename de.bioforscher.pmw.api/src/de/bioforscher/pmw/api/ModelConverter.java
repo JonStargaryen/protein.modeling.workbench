@@ -1,6 +1,7 @@
 package de.bioforscher.pmw.api;
 
 import java.io.IOException;
+import java.io.File;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -90,6 +91,11 @@ public interface ModelConverter {
 	String SIDECHAIN_CB_NAME = "CB";
 
 	/**
+	 * the PDB URL which can be used to fetch structures by ID (format this using the id and you are good to go)
+	 */
+	String PDB_FETCH_URL = "https://files.rcsb.org/download/%s.pdb";
+	
+	/**
 	 * convenience function to convert 3letter-code to 1letter-code
 	 *
 	 * @param aminoAcidName
@@ -133,20 +139,39 @@ public interface ModelConverter {
 	Project createModelingProject(byte[] pdbFileContent) throws IOException;
 	
 	/**
-	 * uses the specified sequence to initialize a {@link Protein}-scaffold
-	 * which can be subsequently refined<br />
-	 *
-	 * @param proteinName
-	 *            the name which will be set to the {@link Protein}s name
-	 *            attribute (e.g. a PDB code or job name)
-	 * @param sequence
-	 *            the sequence to be processed - currently, a single chain in
-	 *            plain String-format can be handled
-	 * @return a {@link Project} containing a {@link Protein} will represent the sequence by a single
-	 *         {@link Chain} consisting of {@link Residue}s with correct
-	 *         residue-numbering and amino acid-attributes
+	 * creates a protein instance by fetching the given pdbId from the PDB and parsing it
+	 * @param pdbId 4 digit pdb code
+	 * @return the file content
+	 * @throws Exception
 	 */
-	Project createModelingProject(String proteinName, String proteinTitle, String sequence);
+	Protein createProteinByPDBId(String pdbId) throws Exception;
+	
+	Protein createProtein(File file) throws Exception;
+	
+//	/**
+//	 * uses the specified sequence to initialize a {@link Protein}-scaffold
+//	 * which can be subsequently refined<br />
+//	 *
+//	 * @param proteinName
+//	 *            the name which will be set to the {@link Protein}s name
+//	 *            attribute (e.g. a PDB code or job name)
+//	 * @param sequence
+//	 *            the sequence to be processed - currently, a single chain in
+//	 *            plain String-format can be handled
+//	 * @return a {@link Project} containing a {@link Protein} will represent the sequence by a single
+//	 *         {@link Chain} consisting of {@link Residue}s with correct
+//	 *         residue-numbering and amino acid-attributes
+//	 */
+//	Project createModelingProject(String proteinName, String proteinTitle, String sequence);
+	
+	/**
+	 * Starts a new modeling project consisting of one protein containing all input information and data shared by all structure models about to be created.
+	 * @param projectName the project's name
+	 * @param sequence the sequence to be processed
+	 * @return a {@link Project} containing a {@link Protein} will represent the sequence by a single 
+	 * {@link Chain} consisting of {@link Residue}s with correct residue-numbering and amino acid-attributes
+	 */
+	Project createModelingProject(String projectName, String sequence);
 	
 	/**
 	 * convenience method to get a residue's atom by its unique name (defined as constant in {@link ModelConverter})

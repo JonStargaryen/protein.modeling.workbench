@@ -7,33 +7,28 @@ import org.osgi.service.log.LogService;
 
 import de.bioforscher.pmw.api.LinearAlgebra;
 import de.bioforscher.pmw.api.ModelConverter;
+import de.bioforscher.pmw.api.ModelPersistence;
 import de.bioforscher.pmw.api.ReconstructionService;
 import de.bioforscher.pmw.model.Protein;
 import de.bioforscher.pmw.model.ReconstructionLevel;
 import de.bioforscher.pmw.reconstruction.factory.CoordinateReconstructionAlgorithmFactory;
 import de.bioforscher.pmw.reconstruction.factory.ReconstructionAlgorithm;
 
-/**
- * 
- */
 @Component(name = "de.bioforscher.pmw.reconstruction")
 public class ReconstructionServiceImpl implements ReconstructionService {
 	@Reference
 	private LinearAlgebra linearAlgebra;
 	@Reference
 	private ModelConverter modelConverter;
-	private CoordinateReconstructionAlgorithmFactory factory;
-	
-	private LogService log;
-	
 	@Reference
-	public void setLogService(LogService log) {
-		this.log = log;
-	}
+	private ModelPersistence modelPersistenceService;
+	@Reference
+	private LogService logger;
+	private CoordinateReconstructionAlgorithmFactory factory;
 	
 	@Activate
 	public void activate() {
-		this.factory = new CoordinateReconstructionAlgorithmFactory(this.log, this.linearAlgebra, this.modelConverter);
+		this.factory = new CoordinateReconstructionAlgorithmFactory(this.logger, this.linearAlgebra, this.modelConverter);
 	}
 	
 	@Override
@@ -76,9 +71,9 @@ public class ReconstructionServiceImpl implements ReconstructionService {
 		}
 		
 		int previousAtomCount = this.modelConverter.getAtoms(protein).size();
-		this.log.log(LogService.LOG_DEBUG, "employing " + reconstructionAlgorithm.getClass().getSimpleName() + " to reconstruct " + reconstructionLevel.name());
+		this.logger.log(LogService.LOG_DEBUG, "employing " + reconstructionAlgorithm.getClass().getSimpleName() + " to reconstruct " + reconstructionLevel.name());
 		reconstructionAlgorithm.reconstruct(protein);
-		this.log.log(LogService.LOG_DEBUG, "reconstructed protein from " + previousAtomCount + " to " + this.modelConverter.getAtoms(protein).size() + " atoms");
+		this.logger.log(LogService.LOG_DEBUG, "reconstructed protein from " + previousAtomCount + " to " + this.modelConverter.getAtoms(protein).size() + " atoms");
 
 		if(requiresReassignment) {
 			// reassign serials implies rearranging the atoms

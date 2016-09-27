@@ -10,13 +10,14 @@ public class Protein extends DTO {
 	public List<Chain> chains;
 	public Membrane membrane;
 	public String name;
-//	public String pdbRepresentation;
 	public ReconstructionLevel reconstructionLevel;
 	public int size;
 	public String title;
 	public List<Motif> motifs;
 	public List<Contact> contacts;
 	public List<Interaction> interactions;
+	//TODO redundant to motifs - keep one
+	public List<Fragment> fragments;
 	
 	public Protein() {
 		this.availableFeatures = new ArrayList<>();
@@ -24,6 +25,7 @@ public class Protein extends DTO {
 		this.motifs = new ArrayList<>();
 		this.contacts = new ArrayList<>();
 		this.interactions = new ArrayList<>();
+		this.fragments = new ArrayList<>();
 	}
 	
 	@Override

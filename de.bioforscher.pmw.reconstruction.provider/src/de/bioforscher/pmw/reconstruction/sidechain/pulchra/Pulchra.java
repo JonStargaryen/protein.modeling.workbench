@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.osgi.service.log.LogService;
 import de.bioforscher.pmw.api.LinearAlgebra;
 import de.bioforscher.pmw.api.ModelConverter;
@@ -134,7 +133,7 @@ public class Pulchra implements ReconstructionAlgorithm {
 			// all atoms within the coordinate file describing this residue
 			for(int j = 0; j < nsc; j++) {
 //				System.out.println(j + " : " + aminoAcidName + " : " + determineAtomName(aminoAcidName, j) + " : " + Arrays.toString(rotStatCoords.get(pos + j + 1)));
-				this.modelConverter.createAtom(r_c, determineAtomName(aminoAcidName, j), this.linearAlgebra.rototranslate(rotStatCoords.get(pos + j + 1), translation, rotation));
+				this.modelConverter.createAtom(r_c, determineAtomName(aminoAcidName, j), this.linearAlgebra.transform(rotStatCoords.get(pos + j + 1), translation, rotation));
 			}
 		}
 	}

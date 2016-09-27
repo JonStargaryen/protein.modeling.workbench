@@ -4,18 +4,21 @@
 		<p class="lead">${Bundle-Description}</p>
 	</div>
 	<div data-ng-controller="TabController as tab">
-		<ul class="nav nav-pills upload-selection">
+		<!--ul class="nav nav-pills upload-selection">
 			<li data-ng-class="{ active: tab.isSelected(1) }"><a data-ng-click="tab.selectTab(1)">files</a></li>
 			<li data-ng-class="{ active: tab.isSelected(2) }"><a data-ng-click="tab.selectTab(2)">sequences</a></li>
-		</ul>
+		</ul-->
 		<form data-ng-controller="SubmitController as submit">
-			<div data-ng-show="tab.isSelected(1)">
-				<input class="upload-input-field drop-box" data-pdb-Upload type="file" name="file">
-			</div>
-			<div data-ng-show="tab.isSelected(2)">
-				<textarea rows="10" style="resize: none; width: 100%; padding: 5px;" class="upload-input-field" data-ng-minlength="0"
-       			data-ng-model="sequence" data-ng-pattern="QWERTIPASDFGHKLYCVNMqwertipasdfghklycvnm" data-ng-required="true"></textarea>
+			<div style="margin-bottom: 3em;">
+				<h5>Predict structure for membrane protein sequence</h5>
+				<textarea rows="10" style="resize: none; width: 100%; padding: 5px; color: #000;" class="upload-input-field" data-ng-minlength="0"
+       			data-ng-model="sequence" data-ng-required="true"></textarea>
 				<a class="btn btn-lg btn-success" data-ng-click="createProtein()" role="button">Submit!</a>
+			</div>
+		
+			<div>
+				<h5>Upload known 3D structure</h5>
+				<input class="upload-input-field drop-box" data-pdb-Upload type="file" name="file">
 			</div>
 		</form>
 	</div>

@@ -30,6 +30,5 @@ public interface PDBConverter {
 		return parsePDBFile(new File(filepath));
 	}
 	
-//	String updatePDBRepresentation(Protein protein);
 	void updatePdbRepresentation(Protein protein);
 }

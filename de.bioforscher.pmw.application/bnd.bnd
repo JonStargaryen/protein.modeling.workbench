@@ -35,10 +35,11 @@ JPM-Command:			pmw
 	osgi.enroute.junit.wrapper;version=4.12
 -runbundles: \
 	aQute.open.store.mongo.provider;version=snapshot,\
+	de.bioforscher.pmw.alignment.provider;version=snapshot,\
 	de.bioforscher.pmw.application;version=snapshot,\
 	de.bioforscher.pmw.common.provider;version=snapshot,\
-	de.bioforscher.pmw.contact.provider;version=snapshot,\
 	de.bioforscher.pmw.feature.extractor.provider;version=snapshot,\
+	de.bioforscher.pmw.fragment.provider;version=snapshot,\
 	de.bioforscher.pmw.model;version=snapshot,\
 	de.bioforscher.pmw.model.converter.provider;version=snapshot,\
 	de.bioforscher.pmw.model.persistence.provider;version=snapshot,\

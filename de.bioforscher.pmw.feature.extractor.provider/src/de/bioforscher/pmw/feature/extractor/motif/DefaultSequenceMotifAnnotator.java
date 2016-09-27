@@ -12,6 +12,7 @@ import de.bioforscher.pmw.feature.extractor.core.Annotator;
 import de.bioforscher.pmw.model.Chain;
 import de.bioforscher.pmw.model.DefinedMotif;
 import de.bioforscher.pmw.model.FeatureType;
+import de.bioforscher.pmw.model.Fragment;
 import de.bioforscher.pmw.model.Motif;
 import de.bioforscher.pmw.model.Protein;
 import de.bioforscher.pmw.model.Residue;
@@ -20,7 +21,7 @@ import de.bioforscher.pmw.model.Topology;
 public class DefaultSequenceMotifAnnotator extends AbstractFeatureProvider implements Annotator {
     
 	public DefaultSequenceMotifAnnotator(FeatureExtractor featureExtractor, LogService logger, LinearAlgebra linearAlgebra, ModelConverter modelConverter) {
-		super(featureExtractor, logger, linearAlgebra, modelConverter, new FeatureType[] {FeatureType.MOTIF_ANNOTATION});
+		super(featureExtractor, logger, linearAlgebra, modelConverter, new FeatureType[] { FeatureType.MOTIF_ANNOTATION });
 	}
 
 	/**
@@ -59,8 +60,8 @@ public class DefaultSequenceMotifAnnotator extends AbstractFeatureProvider imple
                         continue;
                     }
 
-                    Motif motif = new Motif();
                     List<Residue> sublist = chain.residues.subList(resNum, resNum + motifLength + 1);
+                    Motif motif = new Motif();
                     motif.startResidueId = startResidue.residueId;
                     motif.endResidueId = endResidue.residueId;
                     markResiduesAsPartOfSequenceMotif(sublist);
@@ -72,7 +73,11 @@ public class DefaultSequenceMotifAnnotator extends AbstractFeatureProvider imple
                     }
                     motif.sequence = extractSequence(sublist);
                     motif.definition = candidate;
+                    this.logger.log(LogService.LOG_DEBUG, "found " + motif);
                     protein.motifs.add(motif);
+                    
+                    Fragment fragment = Fragment.of(protein, chain, sublist, extractSequence(sublist), candidate);
+                    protein.fragments.add(fragment);
                 }
             }
         }

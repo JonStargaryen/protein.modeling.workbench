@@ -102,7 +102,7 @@ public class SecondaryStructureElementAnnotator extends AbstractFeatureProvider 
 	protected void computeFeatureInternal(Protein protein) {
 		this.residues = this.modelConverter.getResidues(protein);
 		// init mapping
-		this.residues.forEach(r -> this.states.put(r, new SecStrucState(SecondaryStructure.COIL)));
+		this.residues.forEach(r -> this.states.put(r, new SecStrucState(DSSPSecondaryStructureElement.COIL)));
 
 		calculateHAtoms();
 		calculateHBonds();
@@ -114,13 +114,24 @@ public class SecondaryStructureElementAnnotator extends AbstractFeatureProvider 
 		
 		// assign states as features
 		this.states.keySet().forEach(k -> {
-			k.features.put(FeatureType.SECONDARY_STRUCTURE.name(), wrapInArray(this.states.get(k).getSecondaryStructure().ordinal()));
+			k.features.put(FeatureType.SECONDARY_STRUCTURE.name(), wrapInArray(mapToReducedSecondaryStructure(k).ordinal()));
 		});
 		
 		// clean up pseudo-hydrogen atoms
 		this.residues.stream().forEach(r -> {
 			r.atoms = r.atoms.stream().filter(this::isNoPseudoHydrogen).collect(Collectors.toList());
 		});
+	}
+
+	private SecondaryStructure mapToReducedSecondaryStructure(Residue k) {
+		DSSPSecondaryStructureElement sse = this.states.get(k).getSecondaryStructure();
+		if(sse.isHelixType()) {			
+			return SecondaryStructure.HELIX;
+		} else if(sse.isStrandType()) {
+			return SecondaryStructure.STRAND;
+		} else {
+			return SecondaryStructure.COIL;
+		}
 	}
 	
 	private boolean isNoPseudoHydrogen(Atom atom) {
@@ -149,23 +160,23 @@ public class SecondaryStructureElementAnnotator extends AbstractFeatureProvider 
 
 			for (int lcount = ladder.getFrom(); lcount <= ladder.getTo(); lcount++) {
 				SecStrucState state = this.states.get(this.residues.get(lcount));
-				SecondaryStructure stype = state.getSecondaryStructure();
+				DSSPSecondaryStructureElement stype = state.getSecondaryStructure();
 
 				int diff = ladder.getFrom() - lcount;
 				int l2count = ladder.getLfrom() - diff ;
 
 				SecStrucState state2 = this.states.get(this.residues.get(l2count));
-				SecondaryStructure stype2 = state2.getSecondaryStructure();
+				DSSPSecondaryStructureElement stype2 = state2.getSecondaryStructure();
 
 				if(ladder.getFrom() != ladder.getTo()) {
-					setSecStrucType(lcount, SecondaryStructure.EXTENDED);
-					setSecStrucType(l2count, SecondaryStructure.EXTENDED);
+					setSecStrucType(lcount, DSSPSecondaryStructureElement.EXTENDED);
+					setSecStrucType(l2count, DSSPSecondaryStructureElement.EXTENDED);
 				} else {
-					if(!stype.isHelixType() && (!stype.equals(SecondaryStructure.EXTENDED)))
-						setSecStrucType(lcount, SecondaryStructure.BRIDGE);
+					if(!stype.isHelixType() && (!stype.equals(DSSPSecondaryStructureElement.EXTENDED)))
+						setSecStrucType(lcount, DSSPSecondaryStructureElement.BRIDGE);
 
-					if(!stype2.isHelixType() && (!stype2.equals(SecondaryStructure.EXTENDED)))
-						setSecStrucType(l2count, SecondaryStructure.BRIDGE);
+					if(!stype2.isHelixType() && (!stype2.equals(DSSPSecondaryStructureElement.EXTENDED)))
+						setSecStrucType(l2count, DSSPSecondaryStructureElement.BRIDGE);
 				}
 			}
 
@@ -179,21 +190,21 @@ public class SecondaryStructureElementAnnotator extends AbstractFeatureProvider 
 			if (ladder.getBtype().equals(BridgeType.ANTIPARALLEL)) {
 				/* set one side */
 				for(int lcount = ladder.getFrom(); lcount <= conladder.getTo(); lcount++) {
-					setSecStrucType(lcount, SecondaryStructure.EXTENDED);
+					setSecStrucType(lcount, DSSPSecondaryStructureElement.EXTENDED);
 				}
 				/* set other side */
 				for (int lcount = conladder.getLto(); lcount <= ladder.getLfrom(); lcount++) {
-					setSecStrucType(lcount, SecondaryStructure.EXTENDED);
+					setSecStrucType(lcount, DSSPSecondaryStructureElement.EXTENDED);
 				}
 
 			} else {
 				/* set one side */
 				for(int lcount = ladder.getFrom(); lcount <= conladder.getTo(); lcount++) {
-					setSecStrucType(lcount, SecondaryStructure.EXTENDED);
+					setSecStrucType(lcount, DSSPSecondaryStructureElement.EXTENDED);
 				}
 				/* set other side */
 				for(int lcount = ladder.getLfrom(); lcount <= conladder.getLto(); lcount++) {
-					setSecStrucType(lcount, SecondaryStructure.EXTENDED);
+					setSecStrucType(lcount, DSSPSecondaryStructureElement.EXTENDED);
 				}
 			}
 		}
@@ -456,7 +467,7 @@ public class SecondaryStructureElementAnnotator extends AbstractFeatureProvider 
 
 			// Angles = 360 should be discarded
 			if (angle > 70.0 && angle < 359.99) {
-				setSecStrucType(i, SecondaryStructure.BEND);
+				setSecStrucType(i, DSSPSecondaryStructureElement.BEND);
 				state.setBend(true);
 			}
 		}
@@ -464,15 +475,15 @@ public class SecondaryStructureElementAnnotator extends AbstractFeatureProvider 
 
 	private void buildHelices() {
 		// Alpha-helix (i+4), 3-10-helix (i+3), Pi-helix (i+5)
-		checkSetHelix(4, SecondaryStructure.ALPHA_HELIX);
-		checkSetHelix(3, SecondaryStructure.THREE10HELIX);
-		checkSetHelix(5, SecondaryStructure.PIHELIX);
+		checkSetHelix(4, DSSPSecondaryStructureElement.ALPHA_HELIX);
+		checkSetHelix(3, DSSPSecondaryStructureElement.THREE10HELIX);
+		checkSetHelix(5, DSSPSecondaryStructureElement.PIHELIX);
 
 		checkSetTurns();
 	}
 
 	private void checkSetTurns() {
-		SecondaryStructure type = SecondaryStructure.TURN;
+		DSSPSecondaryStructureElement type = DSSPSecondaryStructureElement.TURN;
 
 		for(int idx = 0; idx < 3; idx++) {
 			for(int i = 0; i < this.residues.size() - 1; i++) {
@@ -501,7 +512,7 @@ public class SecondaryStructureElementAnnotator extends AbstractFeatureProvider 
 	 * @param pos
 	 * @param type
 	 */
-	private void setSecStrucType(int pos, SecondaryStructure type) {
+	private void setSecStrucType(int pos, DSSPSecondaryStructureElement type) {
 		SecStrucState ss = this.states.get(this.residues.get(pos));
 		// more favorable according to DSSP ranking
 		if (type.compareTo(ss.getSecondaryStructure()) > 0) {
@@ -522,7 +533,7 @@ public class SecondaryStructureElementAnnotator extends AbstractFeatureProvider 
 	 * @param n
 	 * @param type
 	 */
-	private void checkSetHelix(int n, SecondaryStructure type) {
+	private void checkSetHelix(int n, DSSPSecondaryStructureElement type) {
 		int idx = n - 3;
 		this.logger.log(LogService.LOG_DEBUG, "Set helix " + type + " " + n + " " + idx);
 

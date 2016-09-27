@@ -1,7 +1,9 @@
 package de.bioforscher.pmw.model.converter.provider;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -15,6 +17,8 @@ import java.util.stream.Stream;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.log.LogService;
 
 import de.bioforscher.pmw.api.ModelConverter;
 import de.bioforscher.pmw.model.Atom;
@@ -65,6 +69,8 @@ public class ModelConverterImpl implements ModelConverter {
 	 * connection between 1-letter and 3-letter amino acid name codes
 	 */
 	private Map<String, String> aminoAcidNameMapping;
+	@Reference
+	private LogService logger;
 	
 	@Activate
 	public void activate() {
@@ -112,7 +118,7 @@ public class ModelConverterImpl implements ModelConverter {
 	
 	@Override
 	public String convertToOneLetterCode(String threeLetterCode) {
-		return this.aminoAcidNameMapping.get(threeLetterCode);
+		return this.aminoAcidNameMapping.getOrDefault(threeLetterCode, UNKNOWN_AMINO_ACID_ONE_LETTER_CODE);
 	}
 	
 	@Override
@@ -159,28 +165,76 @@ public class ModelConverterImpl implements ModelConverter {
 		project.date = new Date().getTime();
 		project._id = UUID.randomUUID().toString();
 		project.proteins.add(protein);
-		project.sequence = sequence;
+//		project.sequence = sequence;
 		return project;
 	}
+	
+	public Protein createProteinByPDBId(String pdbId) throws IOException {
+		this.logger.log(LogService.LOG_INFO, "downloading PDB structure with id '" + pdbId + "'");
+		PDBConverter parser = new SimplePDBConverter();
+		Protein protein = parser.parsePDBFile(new URL(String.format(PDB_FETCH_URL, pdbId)).openStream());
+		updatePdbRepresentation(protein);
+		protein.size = getResidues(protein).size();
+		protein.reconstructionLevel = ReconstructionLevel.VALIDATED;
+		assignResidueIds(protein);
+		return protein;
+	}
+	
+	public Protein createProtein(File file) throws IOException {
+		Protein protein = new SimplePDBConverter().parsePDBFile(file);
+		updatePdbRepresentation(protein);
+		protein.size = getResidues(protein).size();
+		protein.reconstructionLevel = ReconstructionLevel.VALIDATED;
+		assignResidueIds(protein);
+		if(protein.name == null) {
+			protein.name = file.getName().split("\\.")[0];
+		}
+		return protein;
+	}
 
+//	@Override
+//	public Project createModelingProject(String proteinName, String proteinTitle, String sequence) {
+//		Protein protein = new Protein();
+//		protein.name = proteinName;
+//		protein.title = proteinTitle != null ? proteinTitle : DEFAULT_PROTEIN_TITLE;
+//		Chain chain = new Chain();
+//		chain.chainId = DEFAULT_CHAIN_ID;
+//		for (int resNum = 0; resNum < sequence.length(); resNum++) {
+//			Residue residue = new Residue();
+////			residue.aminoAcid = String.valueOf(sequence.charAt(resNum));
+//			residue.aminoAcid = convertToThreeLetterCode(String.valueOf(sequence.charAt(resNum)));
+//			residue.residueNumber = resNum + 1;
+//			chain.residues.add(residue);
+//		}
+//		protein.chains.add(chain);
+//		protein.size = sequence.length();
+//		protein.reconstructionLevel = ReconstructionLevel.NONE;
+//		assignResidueIds(protein);
+//		return createModelingProject(protein, sequence);
+//	}
+	
 	@Override
-	public Project createModelingProject(String proteinName, String proteinTitle, String sequence) {
+	public Project createModelingProject(String projectName, String sequence) {
 		Protein protein = new Protein();
-		protein.name = proteinName;
-		protein.title = proteinTitle != null ? proteinTitle : DEFAULT_PROTEIN_TITLE;
+		protein.name = "general information"; // others should be named 'model 1,2,...,n'
 		Chain chain = new Chain();
 		chain.chainId = DEFAULT_CHAIN_ID;
 		for (int resNum = 0; resNum < sequence.length(); resNum++) {
 			Residue residue = new Residue();
-			residue.aminoAcid = String.valueOf(sequence.charAt(resNum));
+			residue.aminoAcid = convertToThreeLetterCode(String.valueOf(sequence.charAt(resNum)));
 			residue.residueNumber = resNum + 1;
+			residue.residueId = resNum;
 			chain.residues.add(residue);
 		}
 		protein.chains.add(chain);
 		protein.size = sequence.length();
 		protein.reconstructionLevel = ReconstructionLevel.NONE;
-		assignResidueIds(protein);
-		return createModelingProject(protein, sequence);
+		Project project = new Project();
+		project.date = new Date().getTime();
+		project._id = UUID.randomUUID().toString();
+		project.name = projectName;
+		project.proteins.add(protein);
+		return project;
 	}
 
 	@Override
@@ -201,7 +255,14 @@ public class ModelConverterImpl implements ModelConverter {
 
 	@Override
 	public Atom getCA(Residue residue) {
-		return residue.atoms.stream().filter(this::isCA).findFirst().get();
+//		try {
+			return residue.atoms.stream().filter(this::isCA).findFirst().get();
+//		} catch (NoSuchElementException e) {
+//			System.out.println("atoms:");
+//			residue.atoms.forEach(System.out::println);
+//			e.printStackTrace();
+//			throw new NoSuchElementException();
+//		}
 	}
 
 	@Override
@@ -274,7 +335,6 @@ public class ModelConverterImpl implements ModelConverter {
 	
 	@Override
 	public void updatePdbSerials(Protein protein) {
-		//TODO check this - for sake of conformity with the numbering of residueIds it starts with 0, does this have any side-effects?
 		int atomCount = 0;
 		for(Chain chain : protein.chains) {
 			for(Residue residue : chain.residues) {
